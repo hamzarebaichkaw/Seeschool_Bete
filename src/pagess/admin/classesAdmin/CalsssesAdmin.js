@@ -1,9 +1,9 @@
 import React, { useState } from "react"
 import Button from '@material-ui/core/Button'
-
+import { CircularProgress } from "../../../components/Wrappers/Wrappers";
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import {
-  Select, MenuItem, Dialog,
+  Grid, Select, MenuItem, Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
@@ -35,7 +35,7 @@ const reducer = (state, action) => {
 export default function ClassesAdmin() {
 
   const classes = useStyles();
-
+ 
   const [state, dispatch] = React.useReducer(reducer, {
     toggleModal: false,
     toggleBody: false,
@@ -49,21 +49,12 @@ export default function ClassesAdmin() {
     dispatch({ type: "OPEN_GRID" })
 
   }
-
+  const [sssshow, setsssshow] = useState(false)
   const [showText, setShowText] = useState(false);
   const [hover, setHover] = useState(false)
   const [show, setShow] = useState(false)
-
+  const [isLoading, setIsLoading] = useState(true);
   const [mat, setmat] = useState([]);
-  const [action1, setAction1] = useState("Choisissez Année...");
-  const [action2, setAction2] = useState("Choisissez Section...");
-  const [action3, setAction3] = useState("Choisissez Numéro...");
-
-  const [year, setYear] = useState([
-    { id: 1, year: "1ère Année" },
-    { id: 2, year: "2ème Année" },
-    { id: 3, year: "3ème Année" }
-  ]);
 
   const [section, setSection] = useState([])
 
@@ -76,6 +67,7 @@ export default function ClassesAdmin() {
   const [selectedClass, setSelectedClass] = useState([])
 
   async function getClassStudents(id) {
+    setIsLoading(true)
     await axios
       .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/ListEtudiantID/${id}`)
       .then(res => {
@@ -84,6 +76,7 @@ export default function ClassesAdmin() {
       .catch(e => {
         console.log(e)
       })
+      setIsLoading(false)
   }
 
   function reg(nv) {
@@ -105,22 +98,6 @@ export default function ClassesAdmin() {
       { id: 5, section: "Science Exprimentale" },
       { id: 6, section: "Technique" }
     ])
-    setAction1("1ère Année")
-  };
-
-  const handleChangeN = e => {
-    setNumero([
-      { id: 1, numero: 1 },
-      { id: 2, numero: 2 },
-      { id: 3, numero: 3 }
-    ])
-    setAction2("Science Informatique")
-  };
-
-  const handleChange = e => {
-    reg("bac")
-    setAction3("3")
-    setShow(true)
   };
 
   const toggleHover = () => {
@@ -149,52 +126,38 @@ export default function ClassesAdmin() {
     { id: 12, niveau: '3ème année', type: 'Secondaire' },
     { id: 13, niveau: '4ème année', type: 'Secondaire' }
   ])
+
+  const [numeross, setNumeross] = useState([])
   const [numeros, setNumeros] = useState([])
 
+  const getNumerosSection = async (niv, sec) => {
+    setIsLoading(true)
+    await axios
+      .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/Numerosclasses/${niv}/${sec}`)
+      .then(res => {
+        setNumeross(res.data)
+      }, 2000)
+      .catch((e) => {
+        console.log(e)
+      })
+      setIsLoading(false)
+  }
+
   const getClasses = async (niv) => {
+    setIsLoading(true)
     console.log(niv)
     await axios
       // .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/ListAdminclasses/Secondaire/3eme`)
       .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/ListAdminclasses/${type}/${niv}`)
       .then(res => {
         setNumeros(res.data)
-        setAction3("3")
         setShow(true)
       }, 2000)
       .catch((e) => {
-
+      console.log(e)
       })
+      setIsLoading(false)
   }
-  const profTables = [
-    ["1", "4°année  ", "1", "Math", "25", "14",],
-    ["2", "4°année", "2", "Math", "25", "12",],
-    ["3", "4°année", "1", "Eco", "25", "18",],
-    ["4", "4°année ", "1", "Eco", "25", "18",],
-    ["5", "4°année ", "2", "Eco", "25", "15",],
-    ["6", "4°année", "1", "SVT", "25", "14",],
-    ["7", "4°année", "2", "SVT", "25", "13",],
-    ["8", "4°année", "1", "Info", "25", "20",],
-    ["9", "4°année", "2", "Info", "25", "21",],
-    ["10", "4°année", "1", "Lettre", "25", "15"],
-  ];
-
-
-  const elevedata = [
-    ["1", "Ahmed Ben Ahmed",],
-    ["2", "Khalil Ben Youssef",],
-    ["3", "Youssef Snoussi",],
-    ["4", "Firas Ouertani",],
-    ["5", "Hamza Nafti", "2",],
-    ["6", "Yasmine Mabrouk",],
-    ["7", "Sarra Hannechi",],
-    ["8", "Leith El Bahri",],
-    ["9", "Mourad El Kefi",],
-    ["10", "Fatma Ben Abdallah",],
-    ["11", "Nermine Ben Aziza",],
-    ["12", "Mouna Hamrouni",],
-    ["13", "Louay Miled",],
-    ["14", "Souha Errais",],
-  ];
 
   const [Numeroo, setNumeroo] = useState(selectedClass[3])
 
@@ -207,26 +170,38 @@ export default function ClassesAdmin() {
   const [Classe, setClasse] = useState(selectedClass[1])
 
   const [Classex, setClassex] = useState([
-    { id: 1, classe: '4 Math ' },
-    { id: 2, classe: '4 Math ' },
-    { id: 3, classe: '4 Math 4' },
+    { id: 1, niveau: '1ère année', type: 'Primaire' },
+    { id: 2, niveau: '2ème année', type: 'Primaire' },
+    { id: 3, niveau: '3ème année', type: 'Primaire' },
+    { id: 4, niveau: '4ème année', type: 'Primaire' },
+    { id: 5, niveau: '5ème année', type: 'Primaire' },
+    { id: 6, niveau: '6ème année', type: 'Primaire' },
+    { id: 7, niveau: '7ème année', type: 'Collège' },
+    { id: 8, niveau: '8ème année', type: 'Collège' },
+    { id: 9, niveau: '9ème année', type: 'Collège' },
+    { id: 10, niveau: '1ère année', type: 'Secondaire' },
+    { id: 11, niveau: '2ème année', type: 'Secondaire' },
+    { id: 12, niveau: '3ème année', type: 'Secondaire' },
+    { id: 13, niveau: '4ème année', type: 'Secondaire' }
 
   ])
-  const [Sectionn, setSectionn] = useState(selectedClass[2])
+  const [Sectionn, setSectionn] = useState('0')
 
   const [Sectionx, setSectionx] = useState([
-    { id: 1, section: 'Math' },
-    { id: 2, section: 'Eco' },
-    { id: 3, section: 'Info' },
-    { id: 4, section: 'SVT' },
-    { id: 5, section: 'Lettre' },
+    { id: 1, section: 'Science Informatique' },
+    { id: 2, section: 'Science Exprimentale' },
+    { id: 2, section: 'Mathématiques' },
+    { id: 3, section: 'Economie et Gestion' },
+    { id: 4, section: 'Lettre' },
+    { id: 5, section: 'Sport' },
+    { id: 6, section: 'Technique' }
   ])
 
   const handleChangeNiveau = e => {
-      setNiveau(e.target.value)
-      getClasses(e.target.value)
-      setShowwwTable(true)
-      setShowwText(null)
+    setNiveau(e.target.value)
+    getClasses(e.target.value)
+    setShowwwTable(true)
+    setShowwText(null)
   }
 
   const Table = () =>
@@ -241,9 +216,9 @@ export default function ClassesAdmin() {
             { name: "section", label: "Section" },
             { name: "numéro", label: "Numéro du classe" },
             { name: "capacité", label: "Capacité" },
-            { name: "nombreEleve", label: "Nombre des eléves" },
+            { name: "nombreEleve", label: "Nombre des élèves" },
             {
-              name: "Liste des Eléves",
+              name: "Liste des élèves",
               options: {
                 customBodyRender: (value, tableMeta, updateValue) => {
                   return (
@@ -265,7 +240,14 @@ export default function ClassesAdmin() {
               }
             }]}
           options={{
-            filterType: "checkbox"
+            filterType: "checkbox",
+            textLabels: {
+              body: {
+                noMatch: isLoading ?
+                  <CircularProgress /> :
+                  'Désolé, il n\'y a aucune donnée correspondante à afficher',
+              },
+            },
           }}
         />
         :
@@ -301,6 +283,9 @@ export default function ClassesAdmin() {
                       () => {
                         setTableMeta(tableMeta.rowData)
                         popup()
+                        console.log(tableMeta.rowData)
+                        setUpdatedID(tableMeta.rowData[0])
+                        setid_Student(tableMeta.rowData[0])
                       }
                     }
                   >
@@ -312,7 +297,14 @@ export default function ClassesAdmin() {
           }
         ]}
         options={{
-          filterType: "checkbox"
+          filterType: "checkbox",
+          textLabels: {
+            body: {
+              noMatch: isLoading ?
+                <CircularProgress /> :
+                'Désolé, il n\'y a aucune donnée correspondante à afficher',
+            },
+          },
         }}
 
       />
@@ -321,6 +313,34 @@ export default function ClassesAdmin() {
   const [showwText, setShowwText] = useState(false);
   const [showwwTable, setShowwwTable] = useState(false);
   const [type, setType] = useState('')
+
+  const [updateLoading, setUpdateLoading] = useState(false)
+
+  const changeClassMatiere = async () => {
+    setUpdateLoading(true)
+    await axios
+      .put(`http://www.pointofsaleseedigitalaency.xyz/public/api/students/${id_Student}`, {
+     
+        "classe": "/public/api/classes/" +  UpdatedID 
+      })
+      .then(res => {
+        console.log(res.data)
+      })
+      .catch(e => {
+        console.log(e)
+      })
+    setUpdateLoading(false)
+  }
+  const [UpdatedID, setUpdatedID] = useState()
+  const [id_Student, setid_Student] = useState()
+
+  // const [Updatesous_niveau, setUpdatesous_niveau] = useState('')
+  // const [UpdateNiveau, setUpdateNiveau] = useState('')
+  // const [upSection, setupSection] = useState('')
+
+
+
+
 
   return (
     <div>
@@ -420,68 +440,85 @@ export default function ClassesAdmin() {
                   <h4>Effectuer à :</h4>
                   <br /> <br />
                   <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                    <p>Niveau:</p>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      style={{ width: 250, height: 20, marginBottom: 80 }}
-                      value={Classe}
-                      onChange={e => {
-                        setClasse(e.target.value)
-                      }}
-                    >
-                      {
-                        Classex.map((n) =>
-                          <MenuItem value={n.id} key={n.id}>
-                            {n.classe}
-                          </MenuItem>
-                        )
-                      }
+                    <Grid>
+                      <p>Niveau:</p>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        style={{ width: 250, height: 20, marginBottom: 80 }}
+                        value={Classe}
+                        onChange={e => {
+                          setClasse(e.target.value)
+                          if (type === 'Primaire' || type === 'Collège')
+                            getNumerosSection(e.target.value, Sectionn)
+                         
+                        }}
+                      >
+                        {
+                          Classex.map((n) =>
+                            n.type === type ?
+                              <MenuItem value={n.niveau} key={n.id}>
+                                {n.niveau}
+                              </MenuItem>
+                              : null
+                          )
+                        }
 
-                    </Select>
-                    
-                    <p>Section:</p>
+                      </Select>
+                    </Grid>
 
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      style={{ width: 250, height: 20, marginBottom: 80 }}
-                      value={Sectionn}
-                      onChange={e => {
-                        setSectionn(e.target.value)
-                      }}
-                    >
-                      {
-                        Sectionx.map((n) =>
+                    {
+                      type === 'Primaire' || type === 'Collège' ?
+                        null
+                        :
+                        <Grid>
+                          <p>Section:</p>
 
-                          <MenuItem value={n.id} key={n.id}>
-                            {n.section}
-                          </MenuItem>
-                        )
-                      }
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            style={{ width: 250, height: 20, marginBottom: 80 }}
+                            value={Sectionn}
+                            onChange={e => {
+                              setSectionn(e.target.value)
+                              getNumerosSection(Classe, e.target.value)
+                            }}
+                          >
+                            {
+                              Sectionx.map((n) =>
 
-                    </Select>
+                                <MenuItem value={n.section} key={n.id}>
+                                  {n.section}
+                                </MenuItem>
+                              )
+                            }
 
-                    <p>Numéro:</p>
+                          </Select>
+                        </Grid>
+                    }
 
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      style={{ width: 250, height: 20, marginBottom: 80 }}
-                      value={Numeroo}
-                      onChange={e => {
-                        setNumeroo(e.target.value)
-                      }}
-                    >
-                      {
-                        Numeroox.map((n) =>
-                          <MenuItem value={n.id} key={n.id}>
-                            {n.numero}
-                          </MenuItem>
-                        )
-                      }
+                    <Grid>
+                      <p>Numéro:</p>
 
-                    </Select>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        style={{ width: 250, height: 20, marginBottom: 80 }}
+                        value={Numeroo}
+                        onChange={e => {
+                          setNumeroo(e.target.value)
+                        }}
+                      >
+                        {
+                          numeross.map((n) =>
+                            <MenuItem value={n["Numéro des classes"]} key={n.id}>
+                              {n["Numéro des classes"]}
+                            </MenuItem>
+                          )
+                        }
+
+                      </Select>
+                    </Grid>
                   </div>
                 </center>
               </div>
@@ -496,7 +533,9 @@ export default function ClassesAdmin() {
               Fermer
             </Button>
             <Button style={{ backgroundColor: "#0E0D47", color: 'white' }}
-              onClick={() => dispatch({ type: "CLOSE_GRID" })}
+              onClick={() => {dispatch({ type: "CLOSE_GRID" })
+                            changeClassMatiere()}
+            }
               color="primary"
             >
               Enregistrer

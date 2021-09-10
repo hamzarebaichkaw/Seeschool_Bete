@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import Button from '@material-ui/core/Button'
-
+import { CircularProgress } from "../../../components/Wrappers/Wrappers";
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import {
   Grid, Select, MenuItem, Dialog,
@@ -14,9 +14,7 @@ import MUIDataTable from "mui-datatables"
 import * as Icons from "@material-ui/icons"
 import UpdateIcon from '@material-ui/icons/Update'
 import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle'
-
 import useStyles from "./styles";
-
 const reducer = (state, action) => {
   switch (action.type) {
     case "OPEN_GRID":
@@ -31,11 +29,8 @@ const reducer = (state, action) => {
       };
   }
 };
-
 export default function ClassesAdmin() {
-
   const classes = useStyles();
-
   const [state, dispatch] = React.useReducer(reducer, {
     toggleModal: false,
     toggleBody: false,
@@ -44,29 +39,22 @@ export default function ClassesAdmin() {
     toggleLarge: false,
     toggleInputModal: false
   });
-
   async function popup(id) {
     dispatch({ type: "OPEN_GRID" })
-
   }
-
+  const [sssshow, setsssshow] = useState(false)
   const [showText, setShowText] = useState(false);
   const [hover, setHover] = useState(false)
   const [show, setShow] = useState(false)
-
+  const [isLoading, setIsLoading] = useState(true);
   const [mat, setmat] = useState([]);
-
   const [section, setSection] = useState([])
-
   const [numero, setNumero] = useState([])
-
   const [classStudents, setClassStudents] = useState([])
-
   const [tableMeta, setTableMeta] = useState([])
-
   const [selectedClass, setSelectedClass] = useState([])
-
   async function getClassStudents(id) {
+    setIsLoading(true)
     await axios
       .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/ListEtudiantID/${id}`)
       .then(res => {
@@ -75,8 +63,8 @@ export default function ClassesAdmin() {
       .catch(e => {
         console.log(e)
       })
+      setIsLoading(false)
   }
-
   function reg(nv) {
     const d = localStorage.getItem('user_id')
     axios
@@ -86,7 +74,6 @@ export default function ClassesAdmin() {
         setmat(res.data)
       }, 2000)
   }
-
   const handleChangeS = e => {
     setSection([
       { id: 1, section: "Science Informatique" },
@@ -97,18 +84,15 @@ export default function ClassesAdmin() {
       { id: 6, section: "Technique" }
     ])
   };
-
   const toggleHover = () => {
     setHover(!hover)
   }
-
   const [types, setTypes] = useState([
     { id: 1, type: 'Primaire' },
     { id: 2, type: 'Collège' },
     { id: 3, type: 'Secondaire' }
   ])
   const [niveau, setNiveau] = useState('')
-
   const [niveaux, setNiveaux] = useState([
     { id: 1, niveau: '1ère année', type: 'Primaire' },
     { id: 2, niveau: '2ème année', type: 'Primaire' },
@@ -124,22 +108,23 @@ export default function ClassesAdmin() {
     { id: 12, niveau: '3ème année', type: 'Secondaire' },
     { id: 13, niveau: '4ème année', type: 'Secondaire' }
   ])
-
   const [numeross, setNumeross] = useState([])
   const [numeros, setNumeros] = useState([])
-
   const getNumerosSection = async (niv, sec) => {
+    setIsLoading(true)
     await axios
       .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/Numerosclasses/${niv}/${sec}`)
       .then(res => {
         setNumeross(res.data)
+        
       }, 2000)
       .catch((e) => {
         console.log(e)
       })
+      setIsLoading(false)
   }
-
   const getClasses = async (niv) => {
+    setIsLoading(true)
     console.log(niv)
     await axios
       // .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/ListAdminclasses/Secondaire/3eme`)
@@ -149,20 +134,17 @@ export default function ClassesAdmin() {
         setShow(true)
       }, 2000)
       .catch((e) => {
-
+      console.log(e)
       })
+      setIsLoading(false)
   }
-
   const [Numeroo, setNumeroo] = useState(selectedClass[3])
-
   const [Numeroox, setNumeroox] = useState([
     { id: 1, numero: ' 1' },
     { id: 2, numero: ' 3' },
     { id: 3, numero: ' 4' },
-
   ])
   const [Classe, setClasse] = useState(selectedClass[1])
-
   const [Classex, setClassex] = useState([
     { id: 1, niveau: '1ère année', type: 'Primaire' },
     { id: 2, niveau: '2ème année', type: 'Primaire' },
@@ -177,10 +159,8 @@ export default function ClassesAdmin() {
     { id: 11, niveau: '2ème année', type: 'Secondaire' },
     { id: 12, niveau: '3ème année', type: 'Secondaire' },
     { id: 13, niveau: '4ème année', type: 'Secondaire' }
-
   ])
   const [Sectionn, setSectionn] = useState('0')
-
   const [Sectionx, setSectionx] = useState([
     { id: 1, section: 'Science Informatique' },
     { id: 2, section: 'Science Exprimentale' },
@@ -190,14 +170,12 @@ export default function ClassesAdmin() {
     { id: 5, section: 'Sport' },
     { id: 6, section: 'Technique' }
   ])
-
   const handleChangeNiveau = e => {
     setNiveau(e.target.value)
     getClasses(e.target.value)
     setShowwwTable(true)
     setShowwText(null)
   }
-
   const Table = () =>
     <div  >
       {show ?
@@ -223,6 +201,7 @@ export default function ClassesAdmin() {
                           getClassStudents(tableMeta.rowData[0])
                           setSelectedClass(tableMeta.rowData)
                           setShowwText(!showwText)
+                          // setUpdatedID(tableMeta.rowData[0])
                           setShowwwTable(null)
                         }
                       }
@@ -234,14 +213,20 @@ export default function ClassesAdmin() {
               }
             }]}
           options={{
-            filterType: "checkbox"
+            filterType: "checkbox",
+            textLabels: {
+              body: {
+                noMatch: isLoading ?
+                  <CircularProgress /> :
+                  'Désolé, il n\'y a aucune donnée correspondante à afficher',
+              },
+            },
           }}
         />
         :
         null
       }
     </div>;
-
   const Text = () =>
     <div  >
       <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
@@ -270,6 +255,9 @@ export default function ClassesAdmin() {
                       () => {
                         setTableMeta(tableMeta.rowData)
                         popup()
+                        console.log(tableMeta.rowData)
+                        // setUpdatedID(tableMeta.rowData[0])
+                        setid_Student(tableMeta.rowData[0])
                       }
                     }
                   >
@@ -280,17 +268,43 @@ export default function ClassesAdmin() {
             }
           }
         ]}
-        options={{
-          filterType: "checkbox"
+ 
+options={{
+          filterType: "checkbox",
+          textLabels: {
+            body: {
+              noMatch: isLoading ?
+                <CircularProgress /> :
+                'Désolé, il n\'y a aucune donnée correspondante à afficher',
+            },
+          },
         }}
-
       />
     </div>;
-
   const [showwText, setShowwText] = useState(false);
   const [showwwTable, setShowwwTable] = useState(false);
   const [type, setType] = useState('')
-
+  const [updateLoading, setUpdateLoading] = useState(false)
+  const [UpdatedID, setUpdatedID] = useState()
+  const [id_Student, setid_Student] = useState()
+  const changeClassMatiere = async () => {
+    setUpdateLoading(true)
+    await axios
+      .put(`http://www.pointofsaleseedigitalaency.xyz/public/api/students/${id_Student}`, {
+        "classe": "/public/api/classes/" +  Numeroo 
+      })
+      .then(res => {
+        console.log(res.data)
+      })
+      .catch(e => {
+        console.log(e)
+      })
+    setUpdateLoading(false)
+  }
+ 
+  // const [Updatesous_niveau, setUpdatesous_niveau] = useState('')
+  // const [UpdateNiveau, setUpdateNiveau] = useState('')
+  // const [upSection, setupSection] = useState('')
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -367,7 +381,6 @@ export default function ClassesAdmin() {
       <div>
         {showwwTable ? <Table /> : null}
         {showwText ? <Text /> : null}
-
       </div>
       <div>
         <Dialog
@@ -411,17 +424,14 @@ export default function ClassesAdmin() {
                               : null
                           )
                         }
-
                       </Select>
                     </Grid>
-
                     {
                       type === 'Primaire' || type === 'Collège' ?
                         null
                         :
                         <Grid>
                           <p>Section:</p>
-
                           <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
@@ -434,20 +444,16 @@ export default function ClassesAdmin() {
                           >
                             {
                               Sectionx.map((n) =>
-
                                 <MenuItem value={n.section} key={n.id}>
                                   {n.section}
                                 </MenuItem>
                               )
                             }
-
                           </Select>
                         </Grid>
                     }
-
                     <Grid>
                       <p>Numéro:</p>
-
                       <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
@@ -455,22 +461,22 @@ export default function ClassesAdmin() {
                         value={Numeroo}
                         onChange={e => {
                           setNumeroo(e.target.value)
+                         
                         }}
                       >
                         {
                           numeross.map((n) =>
-                            <MenuItem value={n["Numéro des classes"]} key={n.id}>
+                            <MenuItem value={n["id"]} key={n["id"] }>
+                            {/* {  setUpdatedID(n["id"])   }  */}
                               {n["Numéro des classes"]}
                             </MenuItem>
                           )
                         }
-
                       </Select>
                     </Grid>
                   </div>
                 </center>
               </div>
-
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -481,15 +487,19 @@ export default function ClassesAdmin() {
               Fermer
             </Button>
             <Button style={{ backgroundColor: "#0E0D47", color: 'white' }}
-              onClick={() => dispatch({ type: "CLOSE_GRID" })}
+              onClick={() => {dispatch({ type: "CLOSE_GRID" })
+                            changeClassMatiere()}
+            }
               color="primary"
             >
               Enregistrer
             </Button>
-
           </DialogActions>
         </Dialog>
       </div>
     </div>
   );
 }
+
+ 
+
