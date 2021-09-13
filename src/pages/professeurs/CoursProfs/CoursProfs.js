@@ -116,7 +116,6 @@ export default function CoursProfs() {
   const [titreCours, setTitreCours] = useState('')
   const [descriptionCours, setDescriptionCours] = useState('')
   const [matiere, setMatiere] = useState('')
-  const [filess, setfiless] = useState('')
   const [listMatieres, setListMatieres] = useState([])
 
   const [loadingAdd, setLoadingAdd] = useState(false)
@@ -197,18 +196,18 @@ export default function CoursProfs() {
       .then(async res => {
         console.log(res.data)
         dispatch({ type: "CLOSE_GRID" })
-        await axios
-          .post(`http://www.pointofsaleseedigitalaency.xyz/public/api/media_objects`, {
-           "id_course" : res.data.id,
-            "file": 'files'
-          })
-          .then(res => {
-            console.log(res.data)
-            dispatch({ type: "CLOSE_GRID" })
-          })
-          .catch(e => {
-            console.log(e)
-          })
+        // await axios
+        //   .post(`http://www.pointofsaleseedigitalaency.xyz/public/api/media_objects`, {
+        //     "id_course" : res.data.id,
+        //     "file": "file"
+        //   })
+        //   .then(res => {
+        //     console.log(res.data)
+        //     dispatch({ type: "CLOSE_GRID" })
+        //   })
+        //   .catch(e => {
+        //     console.log(e)
+        //   })
       })
       .catch(e => {
         console.log(e)
@@ -468,8 +467,7 @@ export default function CoursProfs() {
                         id="alert-dialog-description"
                         component={"div"}
                       >
-                        <Basic  
-                       /> 
+                        <Basic />
                       </DialogContentText>
                     </DialogContent>
                   </center>

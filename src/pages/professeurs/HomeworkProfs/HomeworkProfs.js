@@ -1,5 +1,5 @@
 import 'date-fns';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { Button, CircularProgress } from "../../../components/Wrappers/Wrappers";
 import {
   Grid, Dialog,
@@ -18,12 +18,12 @@ import { Select } from "@material-ui/core";
 import { MenuItem } from "@material-ui/core";
 import axios from 'axios';
 import DateFnsUtils from "@date-io/date-fns"
-
+import { useDropzone } from 'react-dropzone'
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker
 } from "@material-ui/pickers"
-
+import * as Icons from "@material-ui/icons"
 
 
 const reducer = (state, action) => {
@@ -41,9 +41,113 @@ const reducer = (state, action) => {
   }
 };
 
+const baseStyle = {
+  flex: 1,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '100px',
+  borderWidth: 2,
+  borderRadius: 2,
+  borderColor: '#dfe6e9',
+  borderStyle: 'dashed',
+  backgroundColor: '#3a86ff',
+  color: '#dfe6e9',
+  outline: 'none',
+  width: "95%",
+  height: 200,
+  transition: 'border .24s ease-in-out',
+  cursor: 'pointer'
+};
+
+const activeStyle = {
+  borderColor: '#0E0D47',
+  backgroundColor: '#dfe6e9',
+  color: '#0E0D47'
+};
+
+const acceptStyle = {
+  borderColor: '#0E0D47'
+};
+
+const rejectStyle = {
+  borderColor: '#ff1744'
+};
+
 
 
 export default function HomeworksProfs() {
+
+
+
+
+  // var [file_name,setfile] = useState ()
+  function Basic() {
+    const onDrop = useCallback(acceptedFiles => {
+      const files = acceptedFiles.map(file => (
+      
+        setfile_name (file)
+      
+      ));
+    }, [])
+    const {
+      acceptedFiles,
+      getRootProps,
+      getInputProps,
+      isDragActive,
+      isDragAccept,
+      isDragReject
+    } = useDropzone({onDrop});
+  
+    const files = acceptedFiles.map(file => (
+      <li key={file.path} >
+        Fichier : {file.path}
+      </li>
+    ));
+  
+    const style = useMemo(() => ({
+      ...baseStyle,
+      ...(isDragActive ? activeStyle : {}),
+      ...(isDragAccept ? acceptStyle : {}),
+      ...(isDragReject ? rejectStyle : {})
+    }), [
+      isDragActive,
+      isDragReject,
+      isDragAccept
+    ]);
+   
+    
+  
+    return (
+      <section className="container">
+        <div {...getRootProps({ className: 'dropzone', style })}>
+          <input {...getInputProps()  } 
+                 />
+          <Icons.CloudUpload style={{ width: 100, height: 100 }} />
+          <p style={{ alignSelf: 'center', fontSize: 25 }}>Drag/Drop ou cliquer pour ajouter votre cours</p>
+        </div>
+        <div style={{ marginTop: 5 }}>
+          <ul style={{ listStyleType: 'none' }}>
+            {files}
+          </ul>
+        </div>
+      </section>
+    );
+  }
+  
+
+
+
+
+
+
+
+
+
+
+
+
   const classes = useStyles();
   const [Titre, setTitre] = useState("")
   const [date_naissance, setdate_naissance] = useState("");
@@ -153,10 +257,32 @@ export default function HomeworksProfs() {
         "date_fin": selectedDate,
         "class": "/public/api/classes/1",
         // "Semestre": "En Cours"
+        "media": [
+          "/public/api/media_objects/8"
+      ]
       })
-      .then(res => {
-        ajouterfile()
+      .then(async res => {
+        console.log(res.data)
         dispatch({ type: "CLOSE_GRID" })
+        const formData = new FormData();
+        formData.append("file", file_name);
+        formData.append("class", res.data.id);
+         await axios
+           .post(`http://www.pointofsaleseedigitalaency.xyz/public/api/media_objects`, formData,
+           {
+             "headers":
+             {
+               "Content-Type": "multipart/form-data",
+             }
+           }
+         )
+         .then(res => {
+           console.log(res.data)
+            dispatch({ type: "CLOSE_GRID" })
+         })
+         .catch(e => {
+             console.log(e)
+           })
       })
       .catch(e => {
         console.log(e)
@@ -164,22 +290,36 @@ export default function HomeworksProfs() {
     // setLoading(false)
   }
 
-  const ajouterfile = async () => {
-    // setLoading(true)
-    await axios
-      .post(`http://www.pointofsaleseedigitalaency.xyz/public/api/media_objects`, {
-        "file_name ": file_name,
-        "class": "/public/api/classes/1",
+  // const ajouterfile = async () => {
+  //   const formData = new FormData();
+  //   // setLoading(true)
+  //   // await axios
+  //   //   .post(`http://www.pointofsaleseedigitalaency.xyz/public/api/media_objects`, {
+  //   //     "file ": file_name,
+  //   //     "class": "/public/api/classes/1",
 
-      })
-      .then(res => {
-        dispatch({ type: "CLOSE_GRID" })
-      })
-      .catch(e => {
-        console.log(e)
-      })
-    // setLoading(false)
-  }
+  //   //   })
+  //   await axios
+  //   .post(`http://www.pointofsaleseedigitalaency.xyz/public/api/media_objects`, formData,
+  //   {
+  //     "headers":
+  //     {
+  //       "Content-Type": "multipart/form-data",
+  //     }
+  //   }
+  // )
+  //     .then(res => {
+     
+  //       formData.append("file", file_name);
+  //       formData.append("class", res.data.id);
+  //       console.log(res.data)
+  //       dispatch({ type: "CLOSE_GRID" })
+  //     })
+  //     .catch(e => {
+  //       console.log(e)
+  //     })
+  //   // setLoading(false)
+  // }
   const handleDateChange = (date) => {
     setSelectedDate(date);
 };
@@ -297,7 +437,7 @@ function spiltdat (dat) {
                       :
                       (
                         profClasses.map((m) =>
-                          <MenuItem value={m.Calsse} key={m.id}>
+                          <MenuItem value={m.id} key={m.id}>
                             {m.Calsse}
                           </MenuItem>
                         )
@@ -336,7 +476,7 @@ function spiltdat (dat) {
 
                 <br /><br />
 
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
      <Grid container justifyContent="space-around">
         <KeyboardDatePicker
         style={{width : 600}}
@@ -354,11 +494,16 @@ function spiltdat (dat) {
          
         />
      </Grid>
-  </MuiPickersUtilsProvider>
+  </MuiPickersUtilsProvider> */}
 
                 <br /><br />
 
-                <input type="file" id="myFile" name="filename" onChange={e => setfile_name(e.target.value)} ></input>
+                <DialogContentText
+                        id="alert-dialog-description"
+                        component={"div"}
+                      >
+                        <Basic  />
+                      </DialogContentText>
 
               </Widget>
 
@@ -374,6 +519,7 @@ function spiltdat (dat) {
                 if (verif()) {
                   ajouterHomework()
                   dispatch({ type: "CLOSE_GRID" })
+                  console.log(file_name)
                 }
               }}
               color="primary"

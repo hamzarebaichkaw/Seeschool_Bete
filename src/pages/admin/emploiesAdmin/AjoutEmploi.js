@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo,useCallback, } from 'react'
 import Stepper from '@material-ui/core/Stepper'
 import Step from '@material-ui/core/Step'
 import StepLabel from '@material-ui/core/StepLabel'
@@ -69,50 +69,7 @@ const baseStyle = {
   };
 
 
-  function Basic() {
-    const {
-      acceptedFiles,
-      getRootProps,
-      getInputProps,
-      isDragActive,
-      isDragAccept,
-      isDragReject
-    } = useDropzone();
-  
-    const files = acceptedFiles.map(file => (
-      <li key={file.path}>
-        {file.path} - {file.size} bytes
-      </li>
-    ));
-  
-    const style = useMemo(() => ({
-      ...baseStyle,
-      ...(isDragActive ? activeStyle : {}),
-      ...(isDragAccept ? acceptStyle : {}),
-      ...(isDragReject ? rejectStyle : {})
-    }), [
-      isDragActive,
-      isDragReject,
-      isDragAccept
-    ]);
-  
-    return (
-      <section className="container">
-        <div {...getRootProps({ className: 'dropzone', style })}>
-          <input {...getInputProps()} />
-          <Icons.CloudUpload style={{ width: 100, height: 100 }} />
-          <p style={{ alignSelf: 'center', fontSize: 30 }}>Drag/Drop ou cliquer pour ajouter un Emploi du temps</p>
-        </div>
-        <br />
-        <aside>
-          <h4>Files</h4>
-          <ul style={{ listStyle: 'none' }}>{files}</ul>
-        </aside>
-      </section>
-    );
-  }
-  
-  
+ 
 
 
    
@@ -120,6 +77,64 @@ const baseStyle = {
 
 
 const AjoutEmploi = () => {
+
+
+
+    function Basic() {
+        const onDrop = useCallback(acceptedFiles => {
+          const files = acceptedFiles.map(file => (
+          
+            setfile_name (file)
+          
+          ));
+        }, [])
+        const {
+          acceptedFiles,
+          getRootProps,
+          getInputProps,
+          isDragActive,
+          isDragAccept,
+          isDragReject
+        } = useDropzone({onDrop});
+      
+        const files = acceptedFiles.map(file => (
+          <li key={file.path} >
+            Fichier : {file.path}
+          </li>
+        ));
+      
+        const style = useMemo(() => ({
+          ...baseStyle,
+          ...(isDragActive ? activeStyle : {}),
+          ...(isDragAccept ? acceptStyle : {}),
+          ...(isDragReject ? rejectStyle : {})
+        }), [
+          isDragActive,
+          isDragReject,
+          isDragAccept
+        ]);
+       
+        
+      
+        return (
+          <section className="container">
+            <div {...getRootProps({ className: 'dropzone', style })}>
+              <input {...getInputProps()  } 
+                     />
+              <Icons.CloudUpload style={{ width: 100, height: 100 }} />
+              <p style={{ alignSelf: 'center', fontSize: 25 }}>Drag/Drop ou cliquer pour ajouter votre cours</p>
+            </div>
+            <div style={{ marginTop: 5 }}>
+              <ul style={{ listStyleType: 'none' }}>
+                {files}
+              </ul>
+            </div>
+          </section>
+        );
+      }
+  
+      const [file_name, setfile_name] = useState('')
+
     
     const [activeStep, setActiveStep] = React.useState(0)
     const [skipped, setSkipped] = React.useState(new Set())
@@ -309,32 +324,44 @@ const AjoutEmploi = () => {
     const [pays, setPays] = useState('')
     const countryOptions = useMemo(() => countryList().getData(), [])
 
-    function ADDemploie(fullName,id_classe, today ) {
-        // let today = new Date()
-        Axios
+const ADDemploie  = async () => {
+         let today = new Date()
+        await    Axios
             .post('http://www.pointofsaleseedigitalaency.xyz/public/api/emploies',
                 {
                     "Name": fullName,
-                    "classe": `/public/api/classes/${id_classe}`,
-            "Created_at": today
+                    // "classe": `/public/api/classes/${id_classe}`,
+                    "classe": `/public/api/classes/1`,
+                "Created_at": today,
+                    "media": [
+                        "/public/api/media_objects/8"
+                    ]
                 })
             .then(
              async   res => {
-                    await Axios
-                    .post(`http://www.pointofsaleseedigitalaency.xyz/public/api/media_objects`, {
-                       "file": '' ,
-                       "id_emploie": res.data.id
-                    })
-                    .then(res => {
-                      console.log(res.data)
-                  
-                    })
-                    .catch(e => {
-                      console.log(e)
-                    })
+                console.log(res.data)
+                // dispatch({ type: "CLOSE_GRID" })
+                const formData = new FormData();
+                formData.append("file", file_name);
+                formData.append("class", res.data.id);
+                await Axios
+                .post(`http://www.pointofsaleseedigitalaency.xyz/public/api/media_objects`, formData,
+                {
+                  "headers":
+                  {
+                    "Content-Type": "multipart/form-data",
+                  }
                 }
+              )
+              .then(res => {
+                console.log(res.data)
+                //  dispatch({ type: "CLOSE_GRID" })
+              })
+              .catch(e => {
+                  console.log(e)
+                })
+           })
               
-            )
             .catch(e => {
                 console.log(e)
               })
@@ -362,23 +389,23 @@ const AjoutEmploi = () => {
     //     }
 
 
-    function addimg(imagestudent, idStudent) {
-        const formData = new FormData();
-        Array.from(imagestudent).forEach(image => {
-            formData.append('files', image);
-        });
+    // function addimg(imagestudent, idStudent) {
+    //     const formData = new FormData();
+    //     Array.from(imagestudent).forEach(image => {
+    //         formData.append('files', image);
+    //     });
 
-        Axios
-            .post(`http://www.pointofsaleseedigitalaency.xyz/public/api/media_objects`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            })
-            .then(res => {
-                console.log(res);
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    }
+    //     Axios
+    //         .post(`http://www.pointofsaleseedigitalaency.xyz/public/api/media_objects`, formData, {
+    //             headers: { 'Content-Type': 'multipart/form-data' },
+    //         })
+    //         .then(res => {
+    //             console.log(res);
+    //         })
+    //         .catch(err => {
+    //             console.log(err);
+    //         });
+    // }
 
     const [baseImage, setBaseImage] = useState("");
     const uploadImage = async (e) => {
@@ -482,9 +509,8 @@ const AjoutEmploi = () => {
         // setLoading(true)
         await Axios
             .get(`http://www.pointofsaleseedigitalaency.xyz/public/ApiP/IDclass/${type}/${niveau}/${section}/${numero}`)
-            .then(async res => {
-                let id_classe = res.data[0].id
-                ADDemploie(fullName, id_classe,)
+            .then(async res => {           
+                ADDemploie()
             }).catch(e => {
                 console.log(e)
             })
@@ -815,7 +841,7 @@ const AjoutEmploi = () => {
                                                     {
                                                         // ADDemploie(fullName, ) 
                                                         getClassID()
-                                                    
+                                                        console.log(file_name)
                                                     }
                                                 }}
                                             >
@@ -841,7 +867,7 @@ const AjoutEmploi = () => {
                                                 color="primary"
                                                 onClick={() => {
                                                     handleNext();
-                                                    { addimg(imagestudent, idStudent) }
+                                                   
                                                 }}
                                             >
                                                 {activeStep === steps.length - 1
