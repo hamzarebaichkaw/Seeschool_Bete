@@ -64,6 +64,9 @@ export default function AddMatiere(props) {
 
   function AddMat(NomValue, coefficient, Descrption, numh, clas) {
 
+
+
+    console.log(clas)
     Axios
       .post('http://www.pointofsaleseedigitalaency.xyz/public/api/matieres', {
         "Nom": NomValue,

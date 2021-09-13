@@ -107,13 +107,13 @@ console.log(e)
   }
   const [loading, setLoading] = useState(false)
 
-  async function AddMat(NomValue, coefficient, Descrption, numh, id) {
+  async function AddMat(NomValue, coefficient, Descrption, numh, Numeroo) {
     setLoading(true)
     await Axios
       .post('http://www.pointofsaleseedigitalaency.xyz/public/api/matieres', {
         "Nom": NomValue,
         "Description": Descrption,
-        "classe": "/public/api/classes/" + id,
+        "classe": "/public/api/classes/" + Numeroo,
         "coefficient": coefficient,
         "nbHeure": numh
       })
@@ -380,7 +380,7 @@ console.log(e)
                       >
                         {
                           numeross.map((n) =>
-                            <MenuItem value={n["Numéro des classes"]} key={n.id}>
+                            <MenuItem value={n["id"]} key={n.id}>
                               {n["Numéro des classes"]}
                             </MenuItem>
                           )
@@ -392,8 +392,8 @@ console.log(e)
               color="primary"
               variant="contained"
               onClick={() => {
-                if (verif1(NomValue, Descrption, coefficient, numh, id)) {
-                  AddMat(NomValue, coefficient, Descrption, numh, id)
+                if (verif1(NomValue, Descrption, coefficient, numh)) {
+                  AddMat(NomValue, coefficient, Descrption, numh, Numeroo)
                  
                 }
               }}

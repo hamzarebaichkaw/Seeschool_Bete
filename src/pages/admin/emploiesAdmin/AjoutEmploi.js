@@ -5,8 +5,7 @@ import StepLabel from '@material-ui/core/StepLabel'
 import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
 import TextField from '@material-ui/core/TextField'
-import FormControl from '@material-ui/core/FormControl'
-import InputLabel from '@material-ui/core/InputLabel'
+ 
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import { useHistory } from 'react-router-dom'
@@ -333,9 +332,7 @@ const ADDemploie  = async () => {
                     // "classe": `/public/api/classes/${id_classe}`,
                     "classe": `/public/api/classes/1`,
                 "Created_at": today,
-                    "media": [
-                        "/public/api/media_objects/8"
-                    ]
+               
                 })
             .then(
              async   res => {
@@ -343,7 +340,7 @@ const ADDemploie  = async () => {
                 // dispatch({ type: "CLOSE_GRID" })
                 const formData = new FormData();
                 formData.append("file", file_name);
-                formData.append("class", res.data.id);
+                formData.append("id_emploie", res.data.id);
                 await Axios
                 .post(`http://www.pointofsaleseedigitalaency.xyz/public/api/media_objects`, formData,
                 {
@@ -366,46 +363,7 @@ const ADDemploie  = async () => {
                 console.log(e)
               })
     }
-    // function addimg(imagestudent,
-    //     ){
-    //       const formData = new FormData();
-    //            formData.append("file", imagestudent[0] );
-    //       Axios
-    //           .post('http://www.pointofsaleseedigitalaency.xyz/public/api/media_objects', 
-    //        formData 
-    //           ,
-    //             {
-    //                 "headers" :
-    //                                 { 
-    //                                   "Content-Type":"multipart/form-data",
-    //                                 }
-    //             }
-    //           )
-    //           .then( 
-    //             res => {
-    //                 console.log(res.data)
-    //               }
-    //           )
-    //     }
-
-
-    // function addimg(imagestudent, idStudent) {
-    //     const formData = new FormData();
-    //     Array.from(imagestudent).forEach(image => {
-    //         formData.append('files', image);
-    //     });
-
-    //     Axios
-    //         .post(`http://www.pointofsaleseedigitalaency.xyz/public/api/media_objects`, formData, {
-    //             headers: { 'Content-Type': 'multipart/form-data' },
-    //         })
-    //         .then(res => {
-    //             console.log(res);
-    //         })
-    //         .catch(err => {
-    //             console.log(err);
-    //         });
-    // }
+ 
 
     const [baseImage, setBaseImage] = useState("");
     const uploadImage = async (e) => {
