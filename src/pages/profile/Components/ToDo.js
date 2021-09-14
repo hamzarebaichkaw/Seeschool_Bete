@@ -109,8 +109,9 @@ function CustomizedTabs({ classes }) {
   const [homeworks, setHomeWorks] = useState([]);
 
   useEffect(function () {
+    const d = localStorage.getItem('user_id')
     axios
-      .get('http://www.pointofsaleseedigitalaency.xyz/public/APIUser/HomeWork/1')
+      .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/HomeWork/${d}`)
       .then(res => {
         setHomeWorks(res.data)
       }, 2000)
@@ -127,40 +128,12 @@ console.log(homeworks);
     setIndex(index)
   }
 
-  const Todos = [
-    { color: '#FFC35F', time: '10.20', title: 'Call conference with a New' },
-    { color: '#536DFE', time: '10.30', title: 'Presentation Demo Ecological' },
-    { color: '#3CD4A0', time: '10.50', title: 'Call with PR Manager' },
-    { color: '#FFC35F', time: '11.10', title: 'Interview with a new UI/UX' },
-    { color: '#FF5C93', time: '11.30', title: 'Call conference with a New' },
-    { color: '#536DFE', time: '12.00', title: 'Presentation Demo Ecological' },
-    { color: '#FFC35F', time: '12.40', title: 'Sales Presentation' },
-    { color: '#3CD4A0', time: '13.20', title: 'Call conference in New-York' },
-    { color: '#FFC35F', time: '15.20', title: 'Development of the new Widget' },
-    { color: '#536DFE', time: '16.00', title: 'Code review and refactoring' },
-    { color: '#FFC35F', time: '10.20', title: 'Call conference with a New' },
-    { color: '#536DFE', time: '10.30', title: 'Presentation Demo Ecological' },
-    { color: '#3CD4A0', time: '10.50', title: 'Call with PR Manager' },
-    { color: '#FFC35F', time: '11.10', title: 'Interview with a new UI/UX' },
-    { color: '#FF5C93', time: '11.30', title: 'Call conference with a New' },
-    { color: '#536DFE', time: '12.00', title: 'Presentation Demo Ecological' },
-    { color: '#FFC35F', time: '12.40', title: 'Sales Presentation' },
-    { color: '#3CD4A0', time: '13.20', title: 'Call conference in New-York' },
-    { color: '#FFC35F', time: '15.20', title: 'Development of the new Widget' },
-    { color: '#536DFE', time: '16.00', title: 'Code review and refactoring' },
-  ]
+ 
 
 
   return (
     <div className={classes.root}>
-      {/* <AntTabs
-        value={index}
-        onChange={handleChange}
-      >
-        <AntTab value={0} label="Today" />
-        <AntTab value={1} label="This week" />
-        <AntTab value={2} label="This month" />
-      </AntTabs> */}
+     
       <SwipeableViews
         index={index}
         style={{ padding: 0 }}
@@ -171,16 +144,7 @@ console.log(homeworks);
             <ToDoItem key={index} title={item.nom} color={item.color} time={item.time} />
           ))}
         </TabPanel>
-        {/* <TabPanel>
-          {homeworks.map((item, index) => (
-            <ToDoItem key={index} color={item.color} time={item.time} title={item.semestre} />
-          ))}
-        </TabPanel>
-        <TabPanel>
-          {homeworks.map((item, index) => (
-            <ToDoItem key={index} color={item.color} time={item.time} title={item.type} />
-          ))}
-        </TabPanel> */}
+      
       </SwipeableViews>
     </div>
   );

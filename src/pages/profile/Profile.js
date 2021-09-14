@@ -9,18 +9,9 @@ import Donut from './Components/DonutChart';
 import RNSWidget from './Components/RNSWIdget';
 import ToDo from './Components/ToDo';
 import Calendar from './Components/Calendar/Calendar';
-import MediaBlock from './Components/MediaBlock';
-import ViewsWidget from './Components/ViewsWidget';
-import ProfileIcon from '../../images/profile/profilePhoto.svg';
-import BehanceIcon from '../../images/profile/BehanceIcon.svg';
-import MediumIcon from '../../images/profile/MediumIcon.svg';
-import FacebookIcon from '../../images/profile/FacebookIcon.svg';
-import DribbleIcon from '../../images/profile/DribbleIcon.svg';
-import InstagramIcon from '../../images/profile/InstagramIcon.svg';
-import CloudIcon from './Icons/CloudIcon';
-import Chat from "../../components/Chat";
+ 
 import ChatWidget from "../../components/ChatWidget/ChatWidget";
-import { rows } from "../ecommerce/mock";
+ 
 
 // styles
 import useStyles from "./styles";

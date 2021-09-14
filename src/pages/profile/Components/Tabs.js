@@ -14,7 +14,7 @@ import FolderYellowDark from '../Icons/FolderYellowDark';
 import SwipeableViews from 'react-swipeable-views';
 import Box from '@material-ui/core/Box';
 import axios from "axios";
-import FolderIcon from '@material-ui/icons/Folder';
+ 
 import { CircularProgress } from "../../../components/Wrappers/Wrappers";
 import { Link, Button, Avatar } from "../../../components/Wrappers/Wrappers";
 import IconButton from '@material-ui/core/IconButton';
@@ -155,7 +155,7 @@ const styles = (theme) => ({
 })
 
 function CustomizedTabs({ classes }) {
-  // eslint-disable-next-line no-unused-vars
+   
   const [value, setValue] = React.useState(0);
   const [index, setIndex] = React.useState(0);
 
@@ -256,37 +256,7 @@ function CustomizedTabs({ classes }) {
       >
 
 
-
-        {/*     
-           {
-
-CoursM.map(
-
-  (m)=>( 
-
-    
-       <span >
-
-       <TabPanel  >
-           <div style={{display:'flex', justifyContent:'space-between'}}>
-              {/* <FolderBlueDark title="UI/UX" label="MatiÃ©re" value={m.matieress }     onClick={()=>{reg(m.id)}}  />  */}
-        {/* <FolderBlue  title="UI/UX" label="Matiere" value=   {m.matieress }  onClick={()=>{reg(m.id)}} />
-               </div>
-           </TabPanel>
-           
-       </span>
-     
-        
-        //  onClick={()=>{reg(m.id)}}  
-    
-          
-      
-         
  
-
-       )
-
-       ) } */}
 
         <TabPanel>
 
@@ -317,24 +287,7 @@ CoursM.map(
               )}
 
 
-            {/* <div>
-            {theme.palette.type === "dark" 
-              ? <FolderRedDark title="Design" label="files" value={154} /> 
-              : <FolderRed title="Design" label="files" value={154} />
-            }
-          </div>
-          <div>
-            {theme.palette.type === "dark" 
-              ? <FolderGreenDark title="Mobile" label="files" value={98} /> 
-              : <FolderGreen title="Mobile" label="files" value={98} />
-            }
-          </div>
-          <div>
-            {theme.palette.type === "dark" 
-              ? <FolderYellowDark title="Illustration" label="files" value={154} /> 
-              : <FolderYellow title="Illustration" label="files" value={154} />
-            }
-          </div> */
+            { 
 
 
               <Dialog
@@ -413,34 +366,7 @@ CoursM.map(
             </div>
           </span>
         </TabPanel>
-        {/* <TabPanel>
-          <span className={classes.folderWrapper}>
-          <div>
-            {theme.palette.type === "dark" 
-              ? <FolderBlueDark title="UI/UX" label="files" value={178} /> 
-              : <FolderBlue title="UI/UX" label="files" value={178} />
-            }
-          </div>
-          <div>
-            {theme.palette.type === "dark" 
-              ? <FolderRedDark title="Design" label="files" value={154} /> 
-              : <FolderRed title="Design" label="files" value={154} />
-            }
-          </div>
-          <div>
-            {theme.palette.type === "dark" 
-              ? <FolderGreenDark title="Mobile" label="files" value={98} /> 
-              : <FolderGreen title="Mobile" label="files" value={98} />
-            }
-          </div>
-          <div>
-            {theme.palette.type === "dark" 
-              ? <FolderYellowDark title="Illustration" label="files" value={154} /> 
-              : <FolderYellow title="Illustration" label="files" value={154} />
-            }
-          </div>
-          </span>
-        </TabPanel> */}
+      
       </SwipeableViews>
     </div>
   );

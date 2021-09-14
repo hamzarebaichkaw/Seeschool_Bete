@@ -16,7 +16,7 @@ export default function Charts(props) {
     const d = localStorage.getItem('user_id')
     axios
       // .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/ChartAbsenceMatiere/${d}`)
-      .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/ChartAbsenceMatiere/1`)
+      .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/ChartAbsenceMatiere/${d}`)
       .then(res => {
         seCoursM(res.data.series)
         // console.log(res.data.result)

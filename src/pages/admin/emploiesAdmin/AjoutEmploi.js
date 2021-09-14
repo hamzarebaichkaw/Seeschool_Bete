@@ -1,11 +1,9 @@
 import React, { useEffect, useState, useMemo,useCallback, } from 'react'
-import Stepper from '@material-ui/core/Stepper'
-import Step from '@material-ui/core/Step'
-import StepLabel from '@material-ui/core/StepLabel'
+
 import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
 import TextField from '@material-ui/core/TextField'
- 
+
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import { useHistory } from 'react-router-dom'
@@ -330,7 +328,7 @@ const ADDemploie  = async () => {
                 {
                     "Name": fullName,
                     // "classe": `/public/api/classes/${id_classe}`,
-                    "classe": `/public/api/classes/1`,
+                    "classe": `/public/api/classes/` + numero,
                 "Created_at": today,
                
                 })
@@ -363,7 +361,46 @@ const ADDemploie  = async () => {
                 console.log(e)
               })
     }
- 
+    // function addimg(imagestudent,
+    //     ){
+    //       const formData = new FormData();
+    //            formData.append("file", imagestudent[0] );
+    //       Axios
+    //           .post('http://www.pointofsaleseedigitalaency.xyz/public/api/media_objects', 
+    //        formData 
+    //           ,
+    //             {
+    //                 "headers" :
+    //                                 { 
+    //                                   "Content-Type":"multipart/form-data",
+    //                                 }
+    //             }
+    //           )
+    //           .then( 
+    //             res => {
+    //                 console.log(res.data)
+    //               }
+    //           )
+    //     }
+
+
+    // function addimg(imagestudent, idStudent) {
+    //     const formData = new FormData();
+    //     Array.from(imagestudent).forEach(image => {
+    //         formData.append('files', image);
+    //     });
+
+    //     Axios
+    //         .post(`http://www.pointofsaleseedigitalaency.xyz/public/api/media_objects`, formData, {
+    //             headers: { 'Content-Type': 'multipart/form-data' },
+    //         })
+    //         .then(res => {
+    //             console.log(res);
+    //         })
+    //         .catch(err => {
+    //             console.log(err);
+    //         });
+    // }
 
     const [baseImage, setBaseImage] = useState("");
     const uploadImage = async (e) => {
@@ -478,7 +515,7 @@ const ADDemploie  = async () => {
         <Grid container spacing={3}>
             <Grid item xs={12}>
                 <Widget>
-                    <Stepper activeStep={activeStep}>
+                    {/* <Stepper activeStep={activeStep}>
                         {steps.map((label, index) => {
                             const stepProps = {}
                             const labelProps = {}
@@ -493,7 +530,7 @@ const ADDemploie  = async () => {
                                 </Step>
                             )
                         })}
-                    </Stepper>
+                    </Stepper> */}
                 </Widget>
             </Grid>
             <Grid item xs={12}>
@@ -640,7 +677,7 @@ const ADDemploie  = async () => {
                                                         >
                                                             {
                                                                 numeros.map((n) =>
-                                                                    <MenuItem value={n["Numéro des classes"]} key={n.id}>
+                                                                    <MenuItem value={n["id"]} key={n.id}>
                                                                         {
                                                                             n['Numéro des classes']
                                                                         }
@@ -795,7 +832,7 @@ const ADDemploie  = async () => {
                                                 variant="contained"
                                                 color="primary"
                                                 onClick={() => {
-                                                    handleNext();
+                                                    // handleNext();
                                                     {
                                                         // ADDemploie(fullName, ) 
                                                         getClassID()
@@ -803,7 +840,7 @@ const ADDemploie  = async () => {
                                                     }
                                                 }}
                                             >
-                                                Suivant
+                                                Ajouter
                                             </Button>
 
 
