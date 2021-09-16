@@ -485,8 +485,8 @@ const AddProfs = () => {
         arr.push(`/public/api/classes/${c.id}`)
     })
 
-    console.log(`/public/api/matieres/${id_matiere}`)
-    console.log(`/public/api/users/${data.id}`)
+    // console.log(`/public/api/matieres/${id_matiere}`)
+    // console.log(`/public/api/users/${data.id}`)
     await Axios
       .post('http://www.pointofsaleseedigitalaency.xyz/public/api/enseignants',
         {

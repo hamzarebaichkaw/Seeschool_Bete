@@ -34,19 +34,20 @@ export default function AssuiditeProf() {
   const [loadList, setLoadList] = useState(false)
   const [loadingData, setLoadingData] = useState(true)
   const [selectedClasse, setSelectedClasse] = useState()
-
+  const [IdClasse, setIdClasse] = useState()
   useEffect(() => {
     getProfClasses()
   }, [])
 
   const getProfClasses = async () => {
-    // const current_prof = sessionStorage.getItem('user_id')
+   const current_prof = localStorage.getItem('user_id')
     setLoadingClasses(true)
     await axios
       // .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/professeurClasse/${current_prof}`)
-      .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/professeurClasse/15`)
+      .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/professeurClasse/${current_prof}`)
       .then(res => {
         SetProfClasses(res.data)
+       
         console.log(res.data)
       })
       .catch(e => {
@@ -68,7 +69,7 @@ export default function AssuiditeProf() {
     setLoadList(true)
     await axios
       // .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/StudentByClass/${id_classe}`)
-      .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/StudentByClass/1`)
+      .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/StudentByClass/${IdClasse}`)
       .then((res) => {
         // SetlistEtudiants(res.data)
         initNewState(res.data)
@@ -162,6 +163,8 @@ export default function AssuiditeProf() {
         required
         onChange={e => {
           getClassList(e.target.value)
+          setIdClasse(e.target.value)
+          console.log(e.target.value)
           setSelectedClasse(e.target.value)
         }}
       >
