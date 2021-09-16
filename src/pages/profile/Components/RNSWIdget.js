@@ -102,10 +102,9 @@ const RNSWidget = ({ classes }) => {
       
      
       </Grid>
-      <Grid item xs={12} md={12} lg={6}>
+      {/* <Grid item xs={12} md={12} lg={6}>
         <div className={classes.rnsImgWrap}>
-          <img src={CoursM.photo} alt="RNS" />
-        </div>
+      <img src={CoursM.photo} alt="RNS" />  
       </Grid>
       <Grid item xs={12} md={12} lg={6}>
         <div>
@@ -120,7 +119,7 @@ const RNSWidget = ({ classes }) => {
           </div>
           
         </div>
-      </Grid>
+      </Grid> */}
       <br />
             <button style={{backgroundColor:'#4361ee',color:"white", width:'100%', borderRadius:35,}}
             color="primary"

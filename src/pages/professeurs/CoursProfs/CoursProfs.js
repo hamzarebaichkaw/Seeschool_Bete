@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo ,useCallback} from "react";
+
 import { Button, CircularProgress } from "../../../components/Wrappers/Wrappers";
 import {
   Grid,
@@ -48,48 +49,7 @@ const rejectStyle = {
   borderColor: '#ff1744'
 };
 
-function Basic() {
-  const {
-    acceptedFiles,
-    getRootProps,
-    getInputProps,
-    isDragActive,
-    isDragAccept,
-    isDragReject
-  } = useDropzone();
 
-  const files = acceptedFiles.map(file => (
-    <li key={file.path} >
-      Fichier : {file.path}
-    </li>
-  ));
-
-  const style = useMemo(() => ({
-    ...baseStyle,
-    ...(isDragActive ? activeStyle : {}),
-    ...(isDragAccept ? acceptStyle : {}),
-    ...(isDragReject ? rejectStyle : {})
-  }), [
-    isDragActive,
-    isDragReject,
-    isDragAccept
-  ]);
-
-  return (
-    <section className="container">
-      <div {...getRootProps({ className: 'dropzone', style })}>
-        <input {...getInputProps()} />
-        <Icons.CloudUpload style={{ width: 100, height: 100 }} />
-        <p style={{ alignSelf: 'center', fontSize: 30 }}>Drag/Drop ou cliquer pour ajouter votre cours</p>
-      </div>
-      <div style={{ marginTop: 5 }}>
-        <ul style={{ listStyleType: 'none' }}>
-          {files}
-        </ul>
-      </div>
-    </section>
-  );
-}
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -107,6 +67,60 @@ const reducer = (state, action) => {
 };
 
 export default function CoursProfs() {
+  var [file,setfile] = useState ()
+  function Basic() {
+    const onDrop = useCallback(acceptedFiles => {
+      const files = acceptedFiles.map(file => (
+      
+        setfile (file)
+      
+      ));
+    }, [])
+    const {
+      acceptedFiles,
+      getRootProps,
+      getInputProps,
+      isDragActive,
+      isDragAccept,
+      isDragReject
+    } = useDropzone({onDrop});
+  
+    const files = acceptedFiles.map(file => (
+      <li key={file.path} >
+        Fichier : {file.path}
+      </li>
+    ));
+  
+    const style = useMemo(() => ({
+      ...baseStyle,
+      ...(isDragActive ? activeStyle : {}),
+      ...(isDragAccept ? acceptStyle : {}),
+      ...(isDragReject ? rejectStyle : {})
+    }), [
+      isDragActive,
+      isDragReject,
+      isDragAccept
+    ]);
+   
+    
+  
+    return (
+      <section className="container">
+        <div {...getRootProps({ className: 'dropzone', style })}>
+          <input {...getInputProps()  } 
+                 />
+          <Icons.CloudUpload style={{ width: 100, height: 100 }} />
+          <p style={{ alignSelf: 'center', fontSize: 25 }}>Drag/Drop ou cliquer pour ajouter votre cours</p>
+        </div>
+        <div style={{ marginTop: 5 }}>
+          <ul style={{ listStyleType: 'none' }}>
+            {files}
+          </ul>
+        </div>
+      </section>
+    );
+  }
+  
 
   const [selectedClasse, setSelectedClasse] = useState('')
   const [profClasses, SetProfClasses] = useState([])
@@ -142,11 +156,11 @@ export default function CoursProfs() {
   }, [])
 
   const getProfClasses = async () => {
-    // const current_prof = sessionStorage.getItem('user_id')
+     const current_prof = localStorage.getItem('user_id')
     setLoadingClasses(true)
     await axios
-      // .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/professeurClasse/${current_prof}`)
-      .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/professeurClasse/15`)
+       .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/professeurClasse/${current_prof}`)
+      // .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/professeurClasse/15`)
       .then(res => {
         SetProfClasses(res.data)
       })
@@ -155,11 +169,12 @@ export default function CoursProfs() {
       })
     setLoadingClasses(false)
   }
-
+  const [IdClasse, setIdClasse] = useState()
   const getMatiereByClass = async () => {
+    const current_prof = localStorage.getItem('user_id')
     setLoadingMatieres(true)
     await axios
-      .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/matiereByClasssbyProfs/1/1`)
+      .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/matiereByClasssbyProfs/${current_prof}/${IdClasse}`)
       .then(res => {
         setListMatieres(res.data)
         setShowFormAdd(true)
@@ -171,9 +186,10 @@ export default function CoursProfs() {
   }
 
   const handleChange = async () => {
+    const current_prof = localStorage.getItem('user_id')
     setLoadingCours(true)
     await axios
-      .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/ProfileCoursByEnsignat/15`)
+      .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/ProfileCoursByEnsignat/${current_prof}`)
       .then(res => {
         setListCours(res.data)
       })
@@ -189,25 +205,40 @@ export default function CoursProfs() {
     await axios
       .post(`http://www.pointofsaleseedigitalaency.xyz/public/api/courses`, {
         "Name": titreCours,
-        "matiere": `/public/api/matieres/${matiere}`,
+        // "matiere": `/public/api/matieres/${matiere}`,
+        "matiere": `/public/api/matieres/` + matiere , 
         "Date_creation": date,
-        "ensignant": `/public/api/enseignants/1`
+        //   "ensignant": `/public/api/enseignants/${current_prof}`,
+        "ensignant": `/public/api/enseignants/1`,
+        
+      //   "media": [
+      //     "/public/api/media_objects/8"
+      // ]
+        
+         
       })
       .then(async res => {
         console.log(res.data)
         dispatch({ type: "CLOSE_GRID" })
-        // await axios
-        //   .post(`http://www.pointofsaleseedigitalaency.xyz/public/api/media_objects`, {
-        //     "id_course" : res.data.id,
-        //     "file": "file"
-        //   })
-        //   .then(res => {
-        //     console.log(res.data)
-        //     dispatch({ type: "CLOSE_GRID" })
-        //   })
-        //   .catch(e => {
-        //     console.log(e)
-        //   })
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("id_course", res.data.id);
+         await axios
+           .post(`http://www.pointofsaleseedigitalaency.xyz/public/api/media_objects`, formData,
+           {
+             "headers":
+             {
+               "Content-Type": "multipart/form-data",
+             }
+           }
+         )
+         .then(res => {
+           console.log(res.data)
+            dispatch({ type: "CLOSE_GRID" })
+         })
+         .catch(e => {
+             console.log(e)
+           })
       })
       .catch(e => {
         console.log(e)
@@ -275,7 +306,7 @@ export default function CoursProfs() {
               columns={[
                 { name: "id", label: "ID" },
                 // { name: "Name", label: "Titre" },
-                { name: "Matiere", label: "Matière" },
+                { name: "Matiere", label: "Matiere" },
                 { name: "type", label: "Type" },
                 {
                   name: "Created_At", label: "Date", options: {
@@ -337,7 +368,7 @@ export default function CoursProfs() {
                 filterType: "checkbox",
                 textLabels: {
                   body: {
-                    noMatch: loadingCours ? <CircularProgress size={30} /> : 'Aucun Cour est importé'
+                    noMatch: loadingCours ? <CircularProgress size={30} /> : 'Aucun Cour est importÃ©'
                   }
                 }
               }}
@@ -373,6 +404,7 @@ export default function CoursProfs() {
                     onChange={(e) => {
                       setSelectedClasse(e.target.value)
                       getMatiereByClass(e.target.value)
+                      setIdClasse(e.target.value)
                     }}
                   >
                     {profClasses.map((c) =>
@@ -394,7 +426,7 @@ export default function CoursProfs() {
                 <Grid>
                   <center>
                     <Grid item md={4} xs={12} lg={4}>
-                      <DialogTitle id="alert-dialog-title">{"Choisissez une matière: "}</DialogTitle>
+                      <DialogTitle id="alert-dialog-title">{"Choisissez une matiÃ¨re: "}</DialogTitle>
                       <DialogContent>
                         <DialogContentText
                           id="alert-dialog-description"
@@ -467,7 +499,7 @@ export default function CoursProfs() {
                         id="alert-dialog-description"
                         component={"div"}
                       >
-                        <Basic />
+                        <Basic  />
                       </DialogContentText>
                     </DialogContent>
                   </center>
@@ -479,6 +511,7 @@ export default function CoursProfs() {
               showFormAdd ?
                 <Button
                   onClick={() => {
+                    console.log(file)
                     addCours()
                   }}
                   color="primary"
