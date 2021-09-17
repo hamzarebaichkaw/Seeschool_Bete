@@ -368,7 +368,7 @@ export default function CoursProfs() {
                 filterType: "checkbox",
                 textLabels: {
                   body: {
-                    noMatch: loadingCours ? <CircularProgress size={30} /> : 'Aucun Cour est importÃ©'
+                    noMatch: loadingCours ? <CircularProgress size={30} /> : 'Aucun Cour est importé'
                   }
                 }
               }}

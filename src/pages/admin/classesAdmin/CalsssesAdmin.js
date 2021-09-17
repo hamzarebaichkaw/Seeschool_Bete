@@ -9,6 +9,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@material-ui/core"
+import { useHistory, Redirect } from 'react-router-dom'
 import axios from "axios"
 import MUIDataTable from "mui-datatables"
 import * as Icons from "@material-ui/icons"
@@ -41,7 +42,7 @@ export default function ClassesAdmin() {
   });
   async function popup(id) {
     dispatch({ type: "OPEN_GRID" })
-  }
+  }  const [redirection, setRedirection] = useState(false)
   const [sssshow, setsssshow] = useState(false)
   const [showText, setShowText] = useState(false);
   const [hover, setHover] = useState(false)
@@ -295,13 +296,17 @@ options={{
       })
       .then(res => {
         console.log(res.data)
+        setRedirection(true)
       })
       .catch(e => {
         console.log(e)
       })
     setUpdateLoading(false)
   }
- 
+  if (redirection) {
+    //Affichage de la redirection
+    return <Redirect to='/admin/classes' />;
+  }  else {
   // const [Updatesous_niveau, setUpdatesous_niveau] = useState('')
   // const [UpdateNiveau, setUpdateNiveau] = useState('')
   // const [upSection, setupSection] = useState('')
@@ -500,6 +505,6 @@ options={{
     </div>
   );
 }
-
+}
  
 

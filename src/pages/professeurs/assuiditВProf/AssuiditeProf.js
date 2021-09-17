@@ -65,7 +65,7 @@ export default function AssuiditeProf() {
     SetlistEtudiants(arr)
   }
 
-  const getClassList = async (id_classe) => {
+  const getClassList = async () => {
     setLoadList(true)
     await axios
       // .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/StudentByClass/${id_classe}`)

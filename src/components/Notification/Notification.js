@@ -88,7 +88,7 @@ export default function Notification({ variant, ...props }) {
         {iconWithStyles}
       </div>
       <div className={classes.messageContainer}>
-        <Typography
+        {/* <Typography
           className={classnames({
             [classes.containedTypography]: variant === "contained"
           })}
@@ -96,7 +96,7 @@ export default function Notification({ variant, ...props }) {
           size={variant !== "contained" && !props.typographyVariant && "md"}
         >
           {props.Message.length > 30 ? props.Message.slice(0, 30) + '...' : props.Message}
-        </Typography>
+        </Typography> */}
         {props.extraButton && props.extraButtonClick && (
           <Button
             onClick={props.extraButtonClick}

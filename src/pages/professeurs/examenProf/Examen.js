@@ -15,11 +15,11 @@ export default function ExamenProf() {
   }, [])
 
   const getProfClasses = async () => {
-    // const current_prof = sessionStorage.getItem('user_id')
+     const current_prof = localStorage.getItem('user_id')
     setLoadingClasses(true)
     await axios
-      // .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/professeurClasse/${current_prof}`)
-      .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/professeurClasse/15`)
+       .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/professeurClasse/${current_prof}`)
+    //  .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/professeurClasse/15`)
       .then(res => {
         SetProfClasses(res.data)
         console.log(res.data)

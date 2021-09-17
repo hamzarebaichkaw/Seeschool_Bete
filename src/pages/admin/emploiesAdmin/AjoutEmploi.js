@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useMemo,useCallback, } from 'react'
-
+import { useHistory, Redirect } from 'react-router-dom'
 import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
 import TextField from '@material-ui/core/TextField'
 
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
-import { useHistory } from 'react-router-dom'
+
 import useStyles from './styles'
 import { toast } from 'react-toastify'
 import Axios from 'axios'
@@ -76,7 +76,7 @@ const baseStyle = {
 const AjoutEmploi = () => {
 
 
-
+    const [redirection, setRedirection] = useState(false)
     function Basic() {
         const onDrop = useCallback(acceptedFiles => {
           const files = acceptedFiles.map(file => (
@@ -333,7 +333,9 @@ const ADDemploie  = async () => {
                
                 })
             .then(
+                
              async   res => {
+                 
                 console.log(res.data)
                 // dispatch({ type: "CLOSE_GRID" })
                 const formData = new FormData();
@@ -349,6 +351,7 @@ const ADDemploie  = async () => {
                 }
               )
               .then(res => {
+                setRedirection(true)
                 console.log(res.data)
                 //  dispatch({ type: "CLOSE_GRID" })
               })
@@ -510,6 +513,11 @@ const ADDemploie  = async () => {
                 console.log(e)
             })
     }
+    
+  if (redirection) {
+    //Affichage de la redirection
+    return <Redirect to='/admin/emploies' />;
+  }
 
     return (
         <Grid container spacing={3}>

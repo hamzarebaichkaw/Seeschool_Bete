@@ -156,7 +156,10 @@ console.log(e)
     { id: 13, niveau: '4ème_année', type: 'Secondaire' }
   ])
 
-
+  const [distyp, setDistyp] = useState("none")
+  const [disniv, setDisniv] = useState("none")
+  const [dissec, setdissec] = useState("none")
+  const [disnv, setdisnv] = useState("none")
   const [types, setTypes] = useState([
     { id: 1, type: 'Primaire' },
     { id: 2, type: 'Collège' },
@@ -264,31 +267,31 @@ console.log(e)
 
               type={'textera'}
             />
+       <div>
+                                        <p style={{ fontSize: 20 }}>Type:</p>
+                                        <br />
+                                        <p style={{ color: "red", display: distyp }} >Choisir un Type </p>
+                                        <br />
+                                        <Select
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            style={{ width: 250, height: 20, marginBottom: 80 }}
+                                            value={type}
+                                            onChange={e => {
+                                                setType(e.target.value)
+                                            }}
+                                        >
+                                            {
+                                                types.map((t) =>
+                                                    <MenuItem value={t.type} key={t.id}>
+                                                        {t.type}
+                                                    </MenuItem>
+                                                )
+                                            }
+                                        </Select>
+                                    </div>
 
-            <div>
-              <p style={{ fontSize: 20, color: displayniv === "block" ? "red" : "black" }}>Type:</p>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                style={{ width: 250, height: 20, width: 600, marginBottom: 80 }}
-                value={type}
-                onChange={e => {
-                  setType(e.target.value)
-                }}
-                onClick={() => {
-                  if (type === 'Primaire' || type === 'Collège')
-                  setSectionn('0')
-                }}
-              >
-                {
-                  types.map((t) =>
-                    <MenuItem value={t.type} key={t.id}>{t.type}</MenuItem>
-                  )
-                }
-              </Select>
-            </div>
-
-            <div>
+            {/* <div>
               <p style={{ fontSize: 20, color: displayniv === "block" ? "red" : "black" }}>Niveau:</p>
               <Select
                 labelId="demo-simple-select-label"
@@ -300,7 +303,7 @@ console.log(e)
            
               setNiveau(e.target.value)
               getNumerosSection(e.target.value, Sectionn)
-              setid(e.target.value)
+              // setid(e.target.value)
 
             }}
               >
@@ -311,29 +314,9 @@ console.log(e)
                   )
                 }
               </Select>
-            </div>
-
-
-            {/* <div>
-              <p style={{ fontSize: 20, color: displayniv === "block" ? "red" : "black" }}>Section:</p>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                style={{ width: 250, height: 20, width: 600, marginBottom: 80 }}
-                value={clas}
-                onChange={e => {
-                  setclas(e.target.value)
-                }}
-              >
-                {
-                  niveaux.map((n) =>
-                    n.type === type ?
-                      <MenuItem value={n.niveau} key={n.id}>{n.niveau}</MenuItem> : null
-                  )
-                }
-              </Select>
             </div> */}
-            {/* //showit ?  type === 'Secondaire' : setshowit(true) ? */}
+
+{/* 
   { 
                       type === 'Primaire' || type === 'Collège' ?
                         null
@@ -363,9 +346,9 @@ console.log(e)
                           </Select>
                         </Grid>
                         
-                    } 
+                    }  */}
 
-            <div>
+            {/* <div>
               <p style={{ fontSize: 20, color: displayniv === "block" ? "red" : "black" }}>Numero:</p>
               <Select
                         labelId="demo-simple-select-label"
@@ -387,7 +370,107 @@ console.log(e)
                         }
 
                       </Select>
-            </div>
+
+
+            </div> */}
+
+
+                                    {
+                                        type === '' ?
+                                            null :
+                                            (
+                                                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
+                                                    <div>
+                                                        <p style={{ fontSize: 20 }}>Niveau:</p>
+                                                        <br />
+                                                        <p style={{ color: "red", display: disniv }} > Choisir niveau </p>
+                                                        <br />
+                                                        <Select
+                                                            labelId="demo-simple-select-label"
+                                                            id="demo-simple-select"
+                                                            style={{ width: 100, height: 20, marginBottom: 80 }}
+                                                            value={niveau}
+                                                            onChange={e => {
+                                                                setNiveau(e.target.value)
+                                                                getNumerosSection(e.target.value, Sectionn)
+                                                                //Sectionn
+                                                                   setid(e.target.value)
+                                                            }}
+                                                        >
+                                                            {
+                                                                niveaux.map((n) =>
+                                                                    n.type === type ?
+                                                                        <MenuItem value={n.niveau} key={n.id}>
+                                                                            {n.niveau}
+                                                                        </MenuItem> : null
+                                                                )
+                                                            }
+                                                        </Select>
+                                                    </div>
+
+                                                    {
+                                                        type === 'Primaire' || type === 'Collège' ?
+                                                            null : (
+                                                                <div>
+                                                                    <p style={{ fontSize: 20 }}>Section:</p>
+                                                                    <br />
+                                                                    <p style={{ color: "red", display: dissec }} >Choisir section</p>
+                                                                    <br />
+                                                                    <Select
+                                                                        labelId="demo-simple-select-label"
+                                                                        id="demo-simple-select"
+                                                                        style={{ width: 150, height: 20, marginBottom: 80 }}
+                                                                        value={Sectionn}
+                                                                        // Sectionn
+                                                                        onChange={async e => {
+                                                                            setSectionn(e.target.value)
+                                                                            getNumerosSection(niveau, e.target.value)
+                                                                        }}
+                                                                    >
+                                                                        {
+                                                                            //Sectionx
+                                                                            Sectionx.map((s) =>
+                                                                                <MenuItem value={s.section} key={s.id}>
+                                                                                    {s.section}
+                                                                                </MenuItem>
+                                                                            )
+                                                                        }
+                                                                    </Select>
+                                                                </div>
+                                                            )
+                                                    }
+                                                    <div>
+                                                        <p style={{ fontSize: 20 }}>Numéro:</p>
+
+                                                        <br />
+                                                        <p style={{ color: "red", display: disnv }} >Section is needed</p>
+                                                        <br />
+                                                        <Select
+                                                            labelId="demo-simple-select-label"
+                                                            id="demo-simple-select"
+                                                            style={{ width: 100, height: 20, marginBottom: 80 }}
+                                                            value={Numeroo}
+                                                            //  value={Numeroo}
+                                                            onChange={e => {setNumeroo(e.target.value)
+                                                         getClasses(e.target.value)}
+                                                            }
+                                                        >
+                                                            {
+                                                                //numeross
+                                                                numeross.map((n) =>
+                                                                    <MenuItem value={n["id"]} key={n.id}>
+                                                                        {
+                                                                            n['Numéro des classes']
+                                                                        }
+                                                                    </MenuItem>
+                                                                )
+                                                            }
+                                                        </Select>
+                                                    </div>
+                                                </div>
+                                            )
+                                    }
+
             <Button
               color="primary"
               variant="contained"

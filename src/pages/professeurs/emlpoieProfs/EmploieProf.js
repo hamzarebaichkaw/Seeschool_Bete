@@ -30,10 +30,10 @@ export default function EmploieProf() {
   }, []);
 
   async function getEmploi() {
-    const d = localStorage.getItem('user_id')
+    const current_prof = localStorage.getItem('user_id')
     setLoading(true)
     await axios
-      .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/EmploisByProfs/15`)
+      .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/EmploisByProfs/${current_prof}`)
       .then(res => {
         setEmploie(res.data[0].id)
         setFullName(res.data[0].fullname)

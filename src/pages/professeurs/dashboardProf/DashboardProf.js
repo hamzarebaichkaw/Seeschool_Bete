@@ -58,7 +58,7 @@ export default function ProfsDashboard() {
             <Grid item xs={12} sm={5} md={5} lg={5}>
               <div className={classes.visualProfile}>
                 <div className={classes.profileImage}>
-                  <img width="100px" src={photos.photo} alt="profile" />
+                  {/* <img width="100px" src={photos.photo} alt="profile" /> */}
                 </div>
                 <Chip
                   className={classes.chipMargin}

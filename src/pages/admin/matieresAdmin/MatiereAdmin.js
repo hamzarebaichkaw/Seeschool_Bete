@@ -15,6 +15,12 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/styles';
 import { CircularProgress } from "../../../components/Wrappers/Wrappers";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { useHistory, Redirect } from 'react-router-dom';
+
+
+
+
+
 
 const useStyless = makeStyles({
   flexGrow: {
@@ -59,6 +65,8 @@ const reducer = (state, action) => {
 };
 
 export default function MatiereAdmin() {
+
+  const [redirection, setRedirection] = useState(false)
   const classes = useStyless();
   const [CoursM, seCoursM] = useState([]);
 
@@ -177,11 +185,13 @@ export default function MatiereAdmin() {
       })
       .then(res => {
         console.log(res.data)
+        setRedirection(true)
       })
       .catch(e => {
         console.log(e)
       })
     setUpdateLoading(false)
+    
   }
   const [UpdatedID, setUpdatedID] = useState()
 
@@ -203,11 +213,12 @@ export default function MatiereAdmin() {
 
                     if (type == "Primaire" || type === "Collège") { setShowwwTable(true) } {
                       setShowwTextclass(true)
+                      getnvbyMat(e.target.value)
                     }
                     setNiveau(e.target.value)
                     if (type === "Primaire" || type === "Secondaire")
                       getNumerosNiveau(e.target.value)
-                    getnvbyMat(e.target.value)
+                    // getnvbyMat(e.target.value)
                     // setShowwwTable(!showwwTable)
                     // setShowwText(null) 
                     // setShowwTextclass(!showwTextclass)
@@ -236,14 +247,15 @@ export default function MatiereAdmin() {
                 id="demo-simple-select"
                 style={{ width: 250, height: 20, marginBottom: 80 }}
                 value={section}
-                onChange={e => {
+                onChange={ async e => {
+                  getnvbyMat(e.target.value)
                   setSection(e.target.value)
                   setShowwTextclass(true)
                 }}
               >
                 {
                   Sectionx.map((s) =>
-                    <MenuItem value={s.id} key={s.id}>
+                    <MenuItem value={s.section} key={s.id}>
                       {s.section}
                     </MenuItem>
                   )
@@ -530,7 +542,10 @@ export default function MatiereAdmin() {
   const [UpdateMat, setUpdateMat] = useState('')
   const [UpdateSeance, setUpdateSeance] = useState('')
   const [UpdateCoef, setUpdateCoef] = useState('')
-
+  if (redirection) {
+    //Affichage de la redirection
+    return <Redirect to='/admin/matieres' />;
+  }
 
   return (
     <div>
