@@ -173,9 +173,21 @@ export default function MatiereAdmin() {
     { id: 6, section: 'Technique' }
   ])
 
+ 
+   
+  let history = useHistory();
+    const handleClickk = () => {
+     
+      history.push("/admin/matieres");
+    }
+  
+ 
+
   const [updateLoading, setUpdateLoading] = useState(false)
 
   const changeClassMatiere = async () => {
+    
+  
     setUpdateLoading(true)
     await axios
       .put(`http://www.pointofsaleseedigitalaency.xyz/public/api/matieres/${UpdatedID}`, {
@@ -185,7 +197,9 @@ export default function MatiereAdmin() {
       })
       .then(res => {
         console.log(res.data)
-        setRedirection(true)
+        // setRedirection(true)
+        // handleClickk()
+        
       })
       .catch(e => {
         console.log(e)
@@ -542,10 +556,20 @@ export default function MatiereAdmin() {
   const [UpdateMat, setUpdateMat] = useState('')
   const [UpdateSeance, setUpdateSeance] = useState('')
   const [UpdateCoef, setUpdateCoef] = useState('')
-  if (redirection) {
-    //Affichage de la redirection
-    return <Redirect to='/admin/matieres' />;
-  }
+  // if (redirection) {
+  //   //Affichage de la redirection
+  //   return <Redirect to='/admin/matieres' />;
+  // }
+
+  // function HomeButton() {
+  //   let history = useHistory();
+  
+  //   function handleClickk() {
+  //     history.push("/admin/matieres");
+  //   }
+  
+  // }
+  // onClick={handleClickk}
 
   return (
     <div>
@@ -633,6 +657,8 @@ export default function MatiereAdmin() {
                 onClick={() => {
                   dispatch({ type: "CLOSE_GRID" })
                   changeClassMatiere()
+                  handleClickk()
+                  
                 }}
                 color="primary"
               >

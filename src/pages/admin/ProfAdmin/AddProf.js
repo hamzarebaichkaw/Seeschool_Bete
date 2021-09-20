@@ -418,7 +418,8 @@ const AddProfs = () => {
           "password": "azerty123",
           "Genre": Genre,
           "date_naissance": selectedDate,
-          "Nationalite": Nationalite
+          "Nationalite": Nationalite,
+          "file":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBPfQDQBq6cEvatMaQiylSwj_n70y-sxpzHQ&usqp=CAU"
         })
       .then(
         res => {
@@ -512,6 +513,30 @@ const AddProfs = () => {
     { id: 1, sex: "Homme" },
     { id: 2, sex: "Femme" }
   ])
+
+//   const [numeros, setNumeros] = useState([])
+//   const [numero, setNumero] = useState('')
+//   const getNumerosSection = async (niv, sec) => {
+//     await Axios.get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/Numerosclasses/${niv}/${sec}`)
+//       .then(res => {
+//         setNumeros(res.data)
+//       }, 2000)
+//       .catch((e) => {
+// console.log(e)
+//       })
+//   }
+
+
+
+
+
+
+
+
+
+
+
+
   const [redirection, setRedirection] = useState(false)
   if (redirection) {
     //Affichage de la redirection
@@ -759,7 +784,12 @@ const AddProfs = () => {
                           style={{ width: 600, height: 20, marginBottom: 80 }}
                           onSelect={onSelectS}
                           onRemove={onSelectS}
-
+                          onChange={e => {
+                      
+                            // getNumerosSection(e.target.value, section)
+                            // console.log(numeros)
+                          }}
+                        
                           options={nvi}
                           displayValue="niveau" />
 
@@ -784,6 +814,7 @@ const AddProfs = () => {
                           value={section}
                           onChange={e => {
                             setSection(e.target.value)
+                            // getNumerosSection(nvi, e.target.value)
                           }}
                         >
                           {
@@ -801,6 +832,30 @@ const AddProfs = () => {
                       <>
                         <br />
                         <br />
+                        {/* <div>
+                    <p style={{ fontSize: 20 }}>Numéro:</p>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      style={{ width: 250, height: 20, marginBottom: 80 }}
+                      value={numero}
+                      onChange={e => {
+                        setNumero(e.target.value)
+                     
+
+                      }}
+                    >
+                      {
+                        numeros.map((n) =>
+                          <MenuItem value={n["Numéro des classes"]} key={n.id}>
+                            {
+                              n['Numéro des classes']
+                            }
+                          </MenuItem>
+                        )
+                      }
+                    </Select>
+                  </div> */}
                       </>
                   }
 
