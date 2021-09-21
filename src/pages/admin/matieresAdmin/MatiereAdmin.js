@@ -16,9 +16,9 @@ import { makeStyles } from '@material-ui/styles';
 import { CircularProgress } from "../../../components/Wrappers/Wrappers";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { useHistory, Redirect } from 'react-router-dom';
+import { toast } from 'react-toastify'
 
-
-
+import Notification from "../../../components/Notification";
 
 
 
@@ -182,7 +182,28 @@ export default function MatiereAdmin() {
     }
   
  
-
+    function sendNotification() {
+      const componentProps = {
+        type: "feedback",
+        message: "Event ajouté avec succès ",
+        variant: "contained",
+        color: "success"
+      };
+      const options = {
+        type: "info",
+        position: toast.POSITION.TOP_RIGHT,
+        progressClassName: classes.progress,
+        className: classes.notification,
+        timeOut: 1000
+      };
+      return toast(
+        <Notification
+          {...componentProps}
+          className={classes.notificationComponent}
+        />,
+        options
+      );
+    }
   const [updateLoading, setUpdateLoading] = useState(false)
 
   const changeClassMatiere = async () => {
@@ -197,7 +218,8 @@ export default function MatiereAdmin() {
       })
       .then(res => {
         console.log(res.data)
-        // setRedirection(true)
+         setRedirection(true)
+         sendNotification();
         // handleClickk()
         
       })
@@ -556,10 +578,10 @@ export default function MatiereAdmin() {
   const [UpdateMat, setUpdateMat] = useState('')
   const [UpdateSeance, setUpdateSeance] = useState('')
   const [UpdateCoef, setUpdateCoef] = useState('')
-  // if (redirection) {
-  //   //Affichage de la redirection
-  //   return <Redirect to='/admin/matieres' />;
-  // }
+  if (redirection) {
+    //Affichage de la redirection
+    return <Redirect to='/admin/Dashboard' />;
+  }
 
   // function HomeButton() {
   //   let history = useHistory();

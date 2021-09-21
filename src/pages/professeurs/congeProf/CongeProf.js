@@ -61,8 +61,8 @@ export default function CongeProf() {
     const id_prof = localStorage.getItem('user_id')
     setLoadingConges(true)
     await axios
-      // .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/CongessByProf/${id_prof}`)
-      .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/CongessByProf/1`)
+       .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/CongessByProf/${id_prof}`)
+      //.get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/CongessByProf/1`)
       .then((res) => {
         setConges(res.data)
       })

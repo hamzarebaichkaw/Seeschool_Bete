@@ -125,7 +125,7 @@ export default function HomeworksProfs() {
           <input {...getInputProps()  } 
                  />
           <Icons.CloudUpload style={{ width: 100, height: 100 }} />
-          <p style={{ alignSelf: 'center', fontSize: 25 }}>Drag/Drop ou cliquer pour ajouter votre cours</p>
+          <p style={{ alignSelf: 'center', fontSize: 25 }}>Drag/Drop ou cliquer pour ajouter votre Homework</p>
         </div>
         <div style={{ marginTop: 5 }}>
           <ul style={{ listStyleType: 'none' }}>
@@ -226,11 +226,11 @@ export default function HomeworksProfs() {
   }, [])
 
   const Homeworkkks = async () => {
-    // const current_prof = sessionStorage.getItem('user_id')
+    const current_prof = localStorage.getItem('user_id')
     setLoadingConges(true)
     await axios
       // .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/HomeWorkByprof/1/${current_prof}`)
-      .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/HomeWorkByprof/1`)
+      .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/HomeWorkByprof/${current_prof}`)
       .then(res => {
         SetHomework(res.data)
       })
@@ -256,6 +256,7 @@ export default function HomeworksProfs() {
         "Remaque": description,
         "date_fin": selectedDate,
         "class": "/public/api/classes/1",
+        // "class": `/public/api/classes/${Idclasse}`,
         // "Semestre": "En Cours"
         "media": [
           "/public/api/media_objects/8"

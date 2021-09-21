@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import Button from '@material-ui/core/Button'
 import { CircularProgress } from "../../../components/Wrappers/Wrappers";
+import { toast } from 'react-toastify'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import {
   Grid, Select, MenuItem, Dialog,
@@ -15,6 +16,7 @@ import MUIDataTable from "mui-datatables"
 import * as Icons from "@material-ui/icons"
 import UpdateIcon from '@material-ui/icons/Update'
 import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle'
+import Notification from "../../../components/Notification";
 import useStyles from "./styles";
 const reducer = (state, action) => {
   switch (action.type) {
@@ -145,6 +147,33 @@ export default function ClassesAdmin() {
     { id: 2, numero: ' 3' },
     { id: 3, numero: ' 4' },
   ])
+
+
+  function sendNotification() {
+    const componentProps = {
+      type: "feedback",
+      message: "Event ajouté avec succès ",
+      variant: "contained",
+      color: "success"
+    };
+    const options = {
+      type: "info",
+      position: toast.POSITION.TOP_RIGHT,
+      progressClassName: classes.progress,
+      className: classes.notification,
+      timeOut: 1000
+    };
+    return toast(
+      <Notification
+        {...componentProps}
+        className={classes.notificationComponent}
+      />,
+      options
+    );
+  }
+
+
+
   const [Classe, setClasse] = useState(selectedClass[1])
   const [Classex, setClassex] = useState([
     { id: 1, niveau: '1ère année', type: 'Primaire' },
@@ -297,6 +326,7 @@ options={{
       .then(res => {
         console.log(res.data)
         setRedirection(true)
+        sendNotification();
       })
       .catch(e => {
         console.log(e)
@@ -305,7 +335,7 @@ options={{
   }
   if (redirection) {
     //Affichage de la redirection
-    return <Redirect to='/admin/classes' />;
+    return <Redirect to='/admin/Dashboard' />;
   }  else {
   // const [Updatesous_niveau, setUpdatesous_niveau] = useState('')
   // const [UpdateNiveau, setUpdateNiveau] = useState('')

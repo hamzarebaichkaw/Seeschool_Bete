@@ -405,6 +405,7 @@ export default function CoursProfs() {
                       setSelectedClasse(e.target.value)
                       getMatiereByClass(e.target.value)
                       setIdClasse(e.target.value)
+                      console.log(e.target.value)
                     }}
                   >
                     {profClasses.map((c) =>
