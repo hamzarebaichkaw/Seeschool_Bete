@@ -85,7 +85,7 @@ export default function NotesProfs() {
     setShowTable(true)
     const current_prof = localStorage.getItem('user_id')
     await axios
-      // .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/NotekByCalsse/${current_prof}/${id_class}`)
+      
       .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/NotekByCalsse/${idclasse}/${current_prof}`)
       .then(res => {
         setNotesEleves(res.data)
@@ -114,10 +114,10 @@ export default function NotesProfs() {
       .catch(e => {
         console.log(e)
       })
-    // setUpdateLoading(false)
+  
   }
 
-  // const [UpdatedID, setUpdatedID] = useState()
+   
   const [id_bulletin, setid_bulletin] = useState("")
   const [Updatec1, setUpdatec1] = useState('')
   const [Updatec2, setUpdatec2] = useState('')

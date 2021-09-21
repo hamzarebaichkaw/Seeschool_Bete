@@ -55,11 +55,11 @@ export default function AddEvent() {
     const d = localStorage.getItem('user_id')
     await axios
       // .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/Matiere/${d}`)
-      // .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/Events/1`)
+       
       .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/Events/1`)
       .then(res => {
         seCoursM(res.data)
-        // console.log(res.data.result)
+       
       }, 2000)
 
       .catch(() => {

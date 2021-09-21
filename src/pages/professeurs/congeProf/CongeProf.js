@@ -62,7 +62,7 @@ export default function CongeProf() {
     setLoadingConges(true)
     await axios
        .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/CongessByProf/${id_prof}`)
-      //.get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/CongessByProf/1`)
+     
       .then((res) => {
         setConges(res.data)
       })
@@ -81,7 +81,7 @@ export default function CongeProf() {
         "maladie": maladie,
         "Created_At": selectedDatedb,
         "modified_at": selectedDatedf,
-        // "prof": `/public/api/enseignants/${id_prof}`,
+      
         "prof": "/public/api/enseignants/1",
         "status": "En Cours"
       })
