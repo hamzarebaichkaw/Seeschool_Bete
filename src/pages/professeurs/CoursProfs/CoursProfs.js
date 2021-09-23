@@ -149,8 +149,25 @@ export default function CoursProfs() {
   function showw() {
     dispatch({ type: "OPEN_GRID" })
   }
+  const [EnsignatbyIdd, SetEnsignatbyIdd] = useState([])
+
+  const getEnsignatbyId = async () => {
+    const current_prof = localStorage.getItem('user_id')
+   setLoadingClasses(true)
+   await axios
+      .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/EnsignatbyId/${current_prof}`)
+     // .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/EnsignatbyId/222`)
+     .then(res => {
+      SetEnsignatbyIdd(res.data[0].id)
+     })
+     .catch(e => {
+       console.log(e)
+     })
+   setLoadingClasses(false)
+ }
 
   useEffect(() => {
+    getEnsignatbyId()
     getProfClasses()
     handleChange()
   }, [])
@@ -163,6 +180,7 @@ export default function CoursProfs() {
       // .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/professeurClasse/15`)
       .then(res => {
         SetProfClasses(res.data)
+     
       })
       .catch(e => {
         console.log(e)
@@ -208,8 +226,8 @@ export default function CoursProfs() {
         // "matiere": `/public/api/matieres/${matiere}`,
         "matiere": `/public/api/matieres/` + matiere , 
         "Date_creation": date,
-        //   "ensignant": `/public/api/enseignants/${current_prof}`,
-        "ensignant": `/public/api/enseignants/1`,
+          // "ensignant": `/public/api/enseignants/1`,
+        "ensignant": `/public/api/enseignants/` + EnsignatbyIdd
         
       //   "media": [
       //     "/public/api/media_objects/8"
@@ -218,6 +236,7 @@ export default function CoursProfs() {
          
       })
       .then(async res => {
+        console.log(EnsignatbyIdd)
         console.log(res.data)
         dispatch({ type: "CLOSE_GRID" })
         const formData = new FormData();

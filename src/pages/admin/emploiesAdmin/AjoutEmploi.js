@@ -364,46 +364,7 @@ const ADDemploie  = async () => {
                 console.log(e)
               })
     }
-    // function addimg(imagestudent,
-    //     ){
-    //       const formData = new FormData();
-    //            formData.append("file", imagestudent[0] );
-    //       Axios
-    //           .post('http://www.pointofsaleseedigitalaency.xyz/public/api/media_objects', 
-    //        formData 
-    //           ,
-    //             {
-    //                 "headers" :
-    //                                 { 
-    //                                   "Content-Type":"multipart/form-data",
-    //                                 }
-    //             }
-    //           )
-    //           .then( 
-    //             res => {
-    //                 console.log(res.data)
-    //               }
-    //           )
-    //     }
 
-
-    // function addimg(imagestudent, idStudent) {
-    //     const formData = new FormData();
-    //     Array.from(imagestudent).forEach(image => {
-    //         formData.append('files', image);
-    //     });
-
-    //     Axios
-    //         .post(`http://www.pointofsaleseedigitalaency.xyz/public/api/media_objects`, formData, {
-    //             headers: { 'Content-Type': 'multipart/form-data' },
-    //         })
-    //         .then(res => {
-    //             console.log(res);
-    //         })
-    //         .catch(err => {
-    //             console.log(err);
-    //         });
-    // }
 
     const [baseImage, setBaseImage] = useState("");
     const uploadImage = async (e) => {
@@ -423,7 +384,22 @@ const ADDemploie  = async () => {
             };
         });
     };
+    const [EnsignatbyIdd, SetEnsignatbyIdd] = useState([])
 
+    const getEnsignatbyId = async () => {
+      const current_prof = localStorage.getItem('user_id')
+    
+     await Axios
+        .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/EnsignatbyId/${current_prof}`)
+       // .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/EnsignatbyId/222`)
+       .then(res => {
+        SetEnsignatbyIdd(res.data[0].id)
+       })
+       .catch(e => {
+         console.log(e)
+       })
+    
+   }
     
     const [type, setType] = useState('')
     const [types, setTypes] = useState([
@@ -431,6 +407,67 @@ const ADDemploie  = async () => {
         { id: 2, type: 'Collège' },
         { id: 3, type: 'Secondaire' }
     ])
+
+    useEffect(() => {
+        getallprofs()
+        getEnsignatbyId()
+      }, [])
+
+    const getallprofs = async () => {
+        await Axios.get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/allEmploisforProfs`)
+            .then(res => {
+                setproofs(res.data)
+                // console.log(proofs)
+            }, 2000)
+            .catch((e) => {
+                console.log(e)
+            })
+    }
+    const ADDemploieProff  = async () => {
+        let today = new Date()
+       await    Axios
+           .post('http://www.pointofsaleseedigitalaency.xyz/public/api/emploies',
+               {
+                   "Name": fullName,
+                   // "classe": `/public/api/classes/${id_classe}`,
+                   "enseignant": "/public/api/enseignants/" + EnsignatbyIdd,
+               "Created_at": today,
+              
+               })
+           .then(
+               
+            async   res => {
+                
+               console.log(res.data)
+               // dispatch({ type: "CLOSE_GRID" })
+               const formData = new FormData();
+               formData.append("file", file_name);
+               formData.append("id_emploie", res.data.id);
+               await Axios
+               .post(`http://www.pointofsaleseedigitalaency.xyz/public/api/media_objects`, formData,
+               {
+                 "headers":
+                 {
+                   "Content-Type": "multipart/form-data",
+                 }
+               }
+             )
+             .then(res => {
+               setRedirection(true)
+               console.log(res.data)
+               //  dispatch({ type: "CLOSE_GRID" })
+             })
+             .catch(e => {
+                 console.log(e)
+               })
+          })
+             
+           .catch(e => {
+               console.log(e)
+             })
+   }
+    const [proof, setproof] = useState('')
+    const [proofs, setproofs] = useState([])
 
     const [numeros, setNumeros] = useState([])
     const [numero, setNumero] = useState('')
@@ -513,324 +550,265 @@ const ADDemploie  = async () => {
                 console.log(e)
             })
     }
-    
-  if (redirection) {
-    //Affichage de la redirection
-    return <Redirect to='/admin/emploies' />;
-  }
 
-    return (
-        <Grid container spacing={3}>
-            <Grid item xs={12}>
-                <Widget>
-                    {/* <Stepper activeStep={activeStep}>
-                        {steps.map((label, index) => {
-                            const stepProps = {}
-                            const labelProps = {}
-                            if (isStepSkipped(index)) {
-                                stepProps.completed = false
-                            }
-                            return (
-                                <Step key={label} {...stepProps}>
-                                    <StepLabel {...labelProps} classes={{ completed: classes.stepCompleted }}>
-                                        {label}
-                                    </StepLabel>
-                                </Step>
-                            )
-                        })}
-                    </Stepper> */}
-                </Widget>
-            </Grid>
-            <Grid item xs={12}>
-                <Widget>
-                    <Grid item justify={'center'} container>
-                        <Box
-                            display={'flex'}
-                            flexDirection={'column'}
-                            width={600}
-                        >
-                            <Typography
-                                variant={'h5'}
-                                weight={'medium'}
-                                style={{ marginBottom: 30 }}
-                            >
-                                {getStepContent(activeStep)}
-                            </Typography>
-                            <h1>Ajouter un Emploi</h1>
-                            {activeStep === 0 ? (
-                                <>
-                                    <TextField
-                                        id="outlined-basic"
-                                        label="Titre d'emploi"
-                                        // onChange={}
-                                        name="fullName"
-                                        value={fullName}
-                                        onChange={e => setfullName(e.target.value)}
-                                        variant="outlined"
-                                        style={{ marginBottom: 35 }}
-                                        type={'text'}
-                                    />
-                              
+    const [ShowProf, setShowProf] = useState(false);
+    const [Showclasse, setShowclasse] = useState(false);
+    const Prof = () =><div>
+ <TextField
+    id="outlined-basic"
+    label="Titre d'emploi"
+    // onChange={}
+    name="fullName"
+    value={fullName}
+    onChange={e => setfullName(e.target.value)}
+    variant="outlined"
+    style={{ marginBottom: 35 }}
+    type={'text'}
+/>
 
-                                    <TextField
-                                        id="date"
-                                        label="Date de naissance"
-                                        type="date"
-                                        onChange={e => setdate_naissance(e.target.value)}
-                                        InputLabelProps={{
-                                            shrink: true,
-                                        }}
-                                    />
-                                    <br />
-                                    <br />
+ <br /> <br />
+<TextField
+    id="date"
+    label="Date de naissance"
+    type="date"
+    onChange={e => setdate_naissance(e.target.value)}
+    InputLabelProps={{
+        shrink: true,
+    }}
+/>
+<br />
+<br />
 
 
-                                    <>
-                                    <div>
-                                        <p style={{ fontSize: 20 }}>Type:</p>
-                                        <br />
-                                        <p style={{ color: "red", display: distyp }} >Choisir un Type </p>
-                                        <br />
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            style={{ width: 250, height: 20, marginBottom: 80 }}
-                                            value={type}
-                                            onChange={e => {
-                                                setType(e.target.value)
-                                            }}
+<div>
+    <p style={{ fontSize: 20 }}>Professeur</p>
+    <br />
+    <p style={{ color: "red", display: distyp }} >Choisir un Prof </p>
+    <br />
+    <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        style={{ width: 250, height: 20, marginBottom: 80 }}
+        value={proof}
+        onChange={e => {
+            setproof(e.target.value)
+         
+        }}
+    >
+        {
+            proofs.map((t) =>
+                <MenuItem value={t.fullname} key={t.id}>
+                    {t.fullname}
+                </MenuItem>
+            )
+        }
+    </Select>
+</div>
+<Basic 
+                      
+                      
+                      
+                      />
+                         <div>
+                                    {activeStep === 0 ? (
+                                        <Box
+                                            display={'flex'}
+                                            justifyContent={'flex-end'}
                                         >
-                                            {
-                                                types.map((t) =>
-                                                    <MenuItem value={t.type} key={t.id}>
-                                                        {t.type}
-                                                    </MenuItem>
-                                                )
-                                            }
-                                        </Select>
-                                    </div>
-
-                                    {
-                                        type === '' ?
-                                            null :
-                                            (
-                                                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
-                                                    <div>
-                                                        <p style={{ fontSize: 20 }}>Niveau:</p>
-                                                        <br />
-                                                        <p style={{ color: "red", display: disniv }} > Choisir niveau </p>
-                                                        <br />
-                                                        <Select
-                                                            labelId="demo-simple-select-label"
-                                                            id="demo-simple-select"
-                                                            style={{ width: 100, height: 20, marginBottom: 80 }}
-                                                            value={niveau}
-                                                            onChange={e => {
-                                                                setNiveau(e.target.value)
-                                                                getNumerosSection(e.target.value, section)
-                                                            }}
-                                                        >
-                                                            {
-                                                                niveaux.map((n) =>
-                                                                    n.type === type ?
-                                                                        <MenuItem value={n.niveau} key={n.id}>
-                                                                            {n.niveau}
-                                                                        </MenuItem> : null
-                                                                )
-                                                            }
-                                                        </Select>
-                                                    </div>
-
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => {
+                                                    // handleNext();
                                                     {
-                                                        type === 'Primaire' || type === 'Collège' ?
-                                                            null : (
-                                                                <div>
-                                                                    <p style={{ fontSize: 20 }}>Section:</p>
-                                                                    <br />
-                                                                    <p style={{ color: "red", display: dissec }} >Choisir section</p>
-                                                                    <br />
-                                                                    <Select
-                                                                        labelId="demo-simple-select-label"
-                                                                        id="demo-simple-select"
-                                                                        style={{ width: 150, height: 20, marginBottom: 80 }}
-                                                                        value={section}
-                                                                        onChange={async e => {
-                                                                            setSection(e.target.value)
-                                                                            getNumerosSection(niveau, e.target.value)
-                                                                        }}
-                                                                    >
-                                                                        {
-                                                                            sections.map((s) =>
-                                                                                <MenuItem value={s.section} key={s.id}>
-                                                                                    {s.section}
-                                                                                </MenuItem>
-                                                                            )
-                                                                        }
-                                                                    </Select>
-                                                                </div>
-                                                            )
+                                                        // ADDemploie(fullName, ) 
+                                                        ADDemploieProff()
+                                                        console.log(file_name)
                                                     }
-                                                    <div>
-                                                        <p style={{ fontSize: 20 }}>Numéro:</p>
+                                                }}
+                                            >
+                                                Ajouter
+                                            </Button>
 
-                                                        <br />
-                                                        <p style={{ color: "red", display: disnv }} >Section is needed</p>
-                                                        <br />
-                                                        <Select
-                                                            labelId="demo-simple-select-label"
-                                                            id="demo-simple-select"
-                                                            style={{ width: 100, height: 20, marginBottom: 80 }}
-                                                            value={numero}
-                                                            onChange={e => setNumero(e.target.value)}
-                                                        >
-                                                            {
-                                                                numeros.map((n) =>
-                                                                    <MenuItem value={n["id"]} key={n.id}>
-                                                                        {
-                                                                            n['Numéro des classes']
-                                                                        }
-                                                                    </MenuItem>
-                                                                )
-                                                            }
-                                                        </Select>
-                                                    </div>
-                                                </div>
-                                            )
-                                    }
-                                                          <Basic 
-                                                          
-                                                          
-                                                          
-                                                          />
-                                </>
-                                    {/* <TextField
-                                        id="outlined-basic"
-                                        label="Nationalité"
-                                        // onChange={}
-                                        // value={}
-                                        name="nationality"
-                                        value={Nationalite}
-                                        onChange={e => setNationalite(e.target.value)}
-                                        variant="outlined"
-                                        style={{ marginBottom: 35 }}
-                                        type={'text'}
-                                    /> */}
-                                </>
-                            ) : activeStep === 1 ? (
-                                <>
-                                    {/* <Typography weight={'medium'} style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                        {baseImage != "" ? <p style={{ marginTop: 15 }}>Photo:</p> : null}
-                                        <div style={baseImage != "" ? { marginTop: 15 } : null}>
-                                            {
-                                                baseImage != "" ?
-                                                    <img src={baseImage} style={{ width: 150, height: 150, borderRadius: 150, alignSelf: 'center', borderWidth: 1, borderColor: "black" }} />
-                                                    :
-                                                    null
-                                            }
-                                        </div>
-                                    </Typography>
-                                    <label
-                                        className={classes.uploadLabel}
-                                        style={{
-                                            cursor: 'pointer',
-                                            marginBottom: 20,
-                                            marginTop: 20,
-                                            alignItems: 'center',
-                                            color: 'royalblue',
-                                        }}
-                                    >
-                                        {'Choisir une image'}
-                                        <input
-                                            style={{ display: 'none' }}
-                                            type="file"
-                                            accept={"image/*"}
-                                            onChange={e => { uploadImage(e) }}
-                                        />
-                                    </label>
 
-                                    <FormControl
-                                        variant="outlined"
-                                        style={{ marginBottom: 35 }}
-                                    >
-                                        <InputLabel id="demo-simple-select-outlined-label">
-                                            Parent
-                                        </InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-outlined-label"
-                                            id="demo-simple-select-outlined"
-                                            value={parent}
-                                            name="parent"
-                                            onChange={e => setParent(e.target.value)}
-                                            label="Parent"
+                                        </Box>
+                                    ) : (
+                                        <Box
+                                            display={'flex'}
+                                            justifyContent={'space-between'}
                                         >
-                                            {
-                                                parents.map((parentE) =>
-                                                    <MenuItem value={parentE.id}>
-                                                        {parentE.fullName}
-                                                    </MenuItem>
-                                                )
-                                            }
-                                        </Select>
-                                    </FormControl>
+                                            <Button
+                                                onClick={handleBack}
+                                                variant={'outlined'}
+                                                color={'primary'}
+                                            >
+                                                Retour
+                                            </Button>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => {
+                                                    handleNext();
+                                                   
+                                                }}
+                                            >
+                                                {activeStep === steps.length - 1
+                                                    ? 'Ajouter'
+                                                    : 'Suivant'}
+                                            </Button>
+                                        </Box>
+                                    )}
+                                </div>
+    </div>
+   
 
-                                    <TextField
-                                        id="outlined-basic"
-                                        label="Numéro de contact"
-                                        onChange={handleChange}
-                                        value={newUser.phoneNumber || ''}
-                                        name="phoneNumber"
-                                        variant="outlined"
-                                        style={{ marginBottom: 35 }}
-                                    />
 
-                                    <FormControl
-                                        variant="outlined"
-                                        style={{ marginBottom: 35 }}
-                                    >
-                                        <InputLabel id="demo-simple-select-outlined-label">
-                                            Pays
-                                        </InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-outlined-label"
-                                            id="demo-simple-select-outlined"
-                                            value={pays}
-                                            name="pays"
-                                            onChange={e => setPays(e.target.value)}
-                                            label="Pays"
-                                        >
-                                            {
-                                                countryOptions.map((country) =>
-                                                    <MenuItem value={country.label}>
-                                                        {country.label}
-                                                    </MenuItem>
-                                                )
-                                            }
-                                        </Select>
-                                    </FormControl>
 
-                                    <TextField
-                                        id="outlined-basic"
-                                        label="Ville"
-                                        variant="outlined"
-                                        onChange={handleChange}
-                                        style={{ marginBottom: 35 }}
-                                    />
+    const Classe = () =>
+    <div>
+        <TextField
+    id="outlined-basic"
+    label="Titre d'emploi"
+    // onChange={}
+    name="fullName"
+    value={fullName}
+    onChange={e => setfullName(e.target.value)}
+    variant="outlined"
+    style={{ marginBottom: 35 }}
+    type={'text'}
+/>
 
-                                    <TextField
-                                        id="outlined-basic"
-                                        label="Adresse"
-                                        variant="outlined"
-                                        onChange={handleChange}
-                                        style={{ marginBottom: 35 }}
-                                    /> */}
-                                </>
-                            ) : activeStep === 2 ? (
-                                <></>
-                            ) : (
-                                <></>
-                            )}
+ <br /> <br />
+<TextField
+    id="date"
+    label="Date de naissance"
+    type="date"
+    onChange={e => setdate_naissance(e.target.value)}
+    InputLabelProps={{
+        shrink: true,
+    }}
+/>
+<br />
+<br />
+
+
+<>
+<div>
+    <p style={{ fontSize: 20 }}>Type:</p>
+    <br />
+    <p style={{ color: "red", display: distyp }} >Choisir un Type </p>
+    <br />
+    <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        style={{ width: 250, height: 20, marginBottom: 80 }}
+        value={type}
+        onChange={e => {
+            setType(e.target.value)
+        }}
+    >
+        {
+            types.map((t) =>
+                <MenuItem value={t.type} key={t.id}>
+                    {t.type}
+                </MenuItem>
+            )
+        }
+    </Select>
+</div>
+{
+    type === '' ?
+        null :
+        (
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
+                <div>
+                    <p style={{ fontSize: 20 }}>Niveau:</p>
+                    <br />
+                    <p style={{ color: "red", display: disniv }} > Choisir niveau </p>
+                    <br />
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        style={{ width: 100, height: 20, marginBottom: 80 }}
+                        value={niveau}
+                        onChange={e => {
+                            setNiveau(e.target.value)
+                            getNumerosSection(e.target.value, section)
+                        }}
+                    >
+                        {
+                            niveaux.map((n) =>
+                                n.type === type ?
+                                    <MenuItem value={n.niveau} key={n.id}>
+                                        {n.niveau}
+                                    </MenuItem> : null
+                            )
+                        }
+                    </Select>
+                </div>
+
+                {
+                    type === 'Primaire' || type === 'Collège' ?
+                        null : (
                             <div>
-                                <div>
+                                <p style={{ fontSize: 20 }}>Section:</p>
+                                <br />
+                                <p style={{ color: "red", display: dissec }} >Choisir section</p>
+                                <br />
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    style={{ width: 150, height: 20, marginBottom: 80 }}
+                                    value={section}
+                                    onChange={async e => {
+                                        setSection(e.target.value)
+                                        getNumerosSection(niveau, e.target.value)
+                                    }}
+                                >
+                                    {
+                                        sections.map((s) =>
+                                            <MenuItem value={s.section} key={s.id}>
+                                                {s.section}
+                                            </MenuItem>
+                                        )
+                                    }
+                                </Select>
+                            </div>
+                        )
+                }
+                <div>
+                    <p style={{ fontSize: 20 }}>Numéro:</p>
+
+                    <br />
+                    <p style={{ color: "red", display: disnv }} >Section is needed</p>
+                    <br />
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        style={{ width: 100, height: 20, marginBottom: 80 }}
+                        value={numero}
+                        onChange={e => setNumero(e.target.value)}
+                    >
+                        {
+                            numeros.map((n) =>
+                                <MenuItem value={n["id"]} key={n.id}>
+                                    {
+                                        n['Numéro des classes']
+                                    }
+                                </MenuItem>
+                            )
+                        }
+                    </Select>
+                </div>
+            </div>
+        )
+}
+                      <Basic 
+                      
+                      
+                      
+                      />
+                         <div>
                                     {activeStep === 0 ? (
                                         <Box
                                             display={'flex'}
@@ -880,7 +858,132 @@ const ADDemploie  = async () => {
                                         </Box>
                                     )}
                                 </div>
-                            </div>
+</></div>
+
+
+  if (redirection) {
+    //Affichage de la redirection
+    return <Redirect to='/admin/emploies' />;
+  }
+
+    return (
+        <Grid container spacing={3}>
+            <Grid item xs={12}>
+                <Widget>
+                    {/* <Stepper activeStep={activeStep}>
+                        {steps.map((label, index) => {
+                            const stepProps = {}
+                            const labelProps = {}
+                            if (isStepSkipped(index)) {
+                                stepProps.completed = false
+                            }
+                            return (
+                                <Step key={label} {...stepProps}>
+                                    <StepLabel {...labelProps} classes={{ completed: classes.stepCompleted }}>
+                                        {label}
+                                    </StepLabel>
+                                </Step>
+                            )
+                        })}
+                    </Stepper> */}
+                </Widget>
+            </Grid>
+            <Grid item xs={12}>
+                <Widget>
+                    <Grid item justify={'center'} container>
+                        <Box
+                            display={'flex'}
+                            flexDirection={'column'}
+                            width={600}
+                        >
+                            <Typography
+                                variant={'h5'}
+                                weight={'medium'}
+                                style={{ marginBottom: 30 }}
+                            >
+                                {getStepContent(activeStep)}
+                            </Typography>
+                            <h1>Ajouter un Emploi</h1>
+                           
+                                <>
+                                <br />   <br />
+<div style = {{display:'flex', justifyContent:'space-around'}}> 
+
+<Button style={{backgroundColor: "#0E0D47", width: '400px', height: 100, fontSize: 30 }}    onClick={
+                        () => {
+                        
+                            setShowclasse(!Showclasse)
+                            setShowProf(null)
+                        //   setShowwwTable(null)
+                        }
+                      } >  Classe </Button>
+<Button  style={{backgroundColor: "#0E0D47", width: '400px', height: 100, fontSize: 30 }}  onClick={
+                        () => {
+                        
+                            setShowclasse(null)
+                            setShowProf(!ShowProf)
+                        //   setShowwwTable(null)
+                        }
+                      } > Professeur </Button>
+</div>
+<br />   <br />
+                                    
+                          
+                                </>
+                          <div> {Showclasse ? <Classe /> : null} </div>
+                          <div> {ShowProf ? <Prof /> : null} </div>
+                            {/* <div>
+                                {/* <div>
+                                    {activeStep === 0 ? (
+                                        <Box
+                                            display={'flex'}
+                                            justifyContent={'flex-end'}
+                                        >
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => {
+                                                    // handleNext();
+                                                    {
+                                                        // ADDemploie(fullName, ) 
+                                                        getClassID()
+                                                        console.log(file_name)
+                                                    }
+                                                }}
+                                            >
+                                                Ajouter
+                                            </Button>
+
+
+                                        </Box>
+                                    ) : (
+                                        <Box
+                                            display={'flex'}
+                                            justifyContent={'space-between'}
+                                        >
+                                            <Button
+                                                onClick={handleBack}
+                                                variant={'outlined'}
+                                                color={'primary'}
+                                            >
+                                                Retour
+                                            </Button>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => {
+                                                    handleNext();
+                                                   
+                                                }}
+                                            >
+                                                {activeStep === steps.length - 1
+                                                    ? 'Ajouter'
+                                                    : 'Suivant'}
+                                            </Button>
+                                        </Box>
+                                    )}
+                                </div> 
+                            </div> */}
                         </Box>
                     </Grid>
                 </Widget>

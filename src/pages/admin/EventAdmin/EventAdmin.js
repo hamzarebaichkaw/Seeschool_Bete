@@ -56,7 +56,7 @@ export default function AddEvent() {
     await axios
       // .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/Matiere/${d}`)
        
-      .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/Events/1`)
+      .get(`http://www.pointofsaleseedigitalaency.xyz/public/APIUser/EventsAdmin`)
       .then(res => {
         seCoursM(res.data)
        
