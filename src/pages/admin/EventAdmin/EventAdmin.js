@@ -171,26 +171,7 @@ export default function AddEvent() {
             id="alert-dialog-description"
             component={"div"}
           >
-            {/* <MUIDataTable
-            title="Gestion des Congés"
-            data={ mats }
-            columns={[    "nombre absence",
-            "date_absence"
-          ]}
-            options={{
-              filterType: "checkbox",
-              
-              textLabels: {
-                body: {
-                    noMatch:  isLoading ?
-                    <CircularProgress />:
-                        'Désolé, il n\'y a aucune donnée correspondante à afficher',
-                },
-            },
-            }}
-          /> */}
-
-
+ 
             <h2>Details ! </h2>
           </DialogContentText>
         </DialogContent>

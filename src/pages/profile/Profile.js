@@ -116,14 +116,7 @@ function Profile() {
       <Grid item xs={12} lg={5}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={8} md={8} lg={12}>
-            {/* <Widget widgetWithDropdown
-              bodyClass={classes.mediaBlockPadding}
-              title="Media"
-            >
-              <Grid container spacing={1}>
-                <MediaBlock />
-              </Grid>
-            </Widget> */}
+       
             <Widget className={classes.adjustHeight} title="Chat">
               <ChatWidget />
             </Widget>
@@ -162,14 +155,7 @@ function Profile() {
             </Widget> */}
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            {/* <div className={classes.updateWidget}>
-              <div className={classes.updateWidgetFlexContainer}>
-                <CloudIcon />
-                <div className={classes.updateLabel}>Updates</div>
-                <div className={classes.spacer}></div>
-                <Button className={classes.detailsBtn} variant="outlined" color="transparent">DETAILS</Button>
-              </div>
-            </div> */}
+         
           </Grid>
         </Grid>
       </Grid>
@@ -177,6 +163,5 @@ function Profile() {
   );
 }
 
-// #######################################################################
 
 export default Profile;
